@@ -4,6 +4,7 @@ module.exports = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  plugins: [require("daisyui"), require("@tailwindcss/typography")],
   theme: {
     extend: {
       colors: {
@@ -16,5 +17,4 @@ module.exports = {
       },
     },
   },
-  plugins: [],
 };

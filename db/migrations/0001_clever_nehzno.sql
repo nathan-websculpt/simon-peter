@@ -1,0 +1,1 @@
+ALTER TABLE "bible_verse" ALTER COLUMN "verse_content" SET DATA TYPE citext;
