@@ -16,23 +16,22 @@ export const First = ({
   const [chapters, setChapters]: any = useState(null);
   const [theBooks, setTheBooks]: any = useState(null);
 
-  //TODO: get from db on init - for when other versions are present in db
   const [currentBookTitle, setCurrentBookTitle] = useState("");
   const [currentChapterTitle, setCurrentChapterTitle] = useState("");
   const [currentChapterId, setCurrentChapterId] = useState(1);
 
-  const [hasStarted, setHasStarted] = useState(false);
-  const [hasInitialized, setHasInitialized] = useState(false);
+  useEffect(() => {
+    const doServerAction = async () => {
+      console.log("initializing");
+      const initData = await initApp(); // contains book/chapter info and that chapter's verses
+      setTheVerses(initData.verses);
+      setTheBooks(initData.books);
+      setCurrentBookTitle(initData.book.title);
+      setCurrentChapterTitle(initData.chapter.chapter_number);
+    };
 
-  const init = async () => {
-    console.log("initializing...");
-    setHasInitialized(true);
-    const initData = await initApp(); // contains book/chapter info and that chapter's verses
-    setTheVerses(initData.verses);
-    setTheBooks(initData.books);
-    setCurrentBookTitle(initData.book.title);
-    setCurrentChapterTitle(initData.chapter.chapter_number);
-  };
+    doServerAction();
+  }, []); //remember, this is componentDidMount
 
   useEffect(() => {
     if (chapters) {
@@ -81,8 +80,6 @@ export const First = ({
     setCurrentChapterTitle(this_obj.chapter.chapter_number.toString());
   };
 
-  if (hasStarted && !hasInitialized) init();
-
   const handlePrevPageClick = async (e) => {
     const this_obj = await getPreviousChapter(currentChapterId);
     console.log("PREV CLICK: This Chapter's Verses:", this_obj);
@@ -111,12 +108,6 @@ export const First = ({
       {/* button to alter state */}
       <div className="flex flex-col w-full">
         <div className="flex flex-col">
-          <button
-            className="btn btn-primary mb-6"
-            onClick={() => setHasStarted(true)}
-          >
-            CLICK TO START APP
-          </button>
           <div className="flex flex-row pl-4">
             <label className="btn btn-circle btn-primary swap swap-rotate">
               {/* this hidden checkbox controls the state */}
