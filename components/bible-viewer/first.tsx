@@ -24,12 +24,6 @@ export const First = ({
   const [hasStarted, setHasStarted] = useState(false);
   const [hasInitialized, setHasInitialized] = useState(false);
 
-  useEffect(() => {
-    if (!hasStarted) {
-      setHasStarted(true);
-    }
-  }, [hasStarted]);
-
   const init = async () => {
     console.log("initializing...");
     setHasInitialized(true);
@@ -117,6 +111,12 @@ export const First = ({
       {/* button to alter state */}
       <div className="flex flex-col w-full">
         <div className="flex flex-col">
+          <button
+            className="btn btn-primary mb-6"
+            onClick={() => setHasStarted(true)}
+          >
+            CLICK TO START APP
+          </button>
           <div className="flex flex-row pl-4">
             <label className="btn btn-circle btn-primary swap swap-rotate">
               {/* this hidden checkbox controls the state */}
