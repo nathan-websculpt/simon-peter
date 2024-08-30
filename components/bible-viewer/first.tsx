@@ -21,7 +21,14 @@ export const First = ({
   const [currentChapterTitle, setCurrentChapterTitle] = useState("");
   const [currentChapterId, setCurrentChapterId] = useState(1);
 
+  const [hasStarted, setHasStarted] = useState(false);
   const [hasInitialized, setHasInitialized] = useState(false);
+
+  useEffect(() => {
+    if (!hasStarted) {
+      setHasStarted(true);
+    }
+  }, [hasStarted]);
 
   const init = async () => {
     console.log("initializing...");
@@ -80,7 +87,7 @@ export const First = ({
     setCurrentChapterTitle(this_obj.chapter.chapter_number.toString());
   };
 
-  if (!hasInitialized) init();
+  if (hasStarted && !hasInitialized) init();
 
   const handlePrevPageClick = async (e) => {
     const this_obj = await getPreviousChapter(currentChapterId);
