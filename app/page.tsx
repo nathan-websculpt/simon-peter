@@ -78,6 +78,21 @@ async function call_get_next_chapter(chapter_id: number) {
   //TODO: try catch for [0]
 }
 
+async function call_fts_search(searchText: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("search_fts", {
+    search_by: searchText,
+  });
+
+  if (error) {
+    console.error("Error calling stored procedure:", error);
+    return null;
+  }
+  console.log(data[0]);
+  return data[0];
+  //TODO: try catch for [0]
+}
+
 export default async function Index() {
   const canInitSupabaseClient = () => {
     // This function is just for the interactive tutorial.
@@ -122,6 +137,12 @@ export default async function Index() {
     return thisVersesList;
   };
 
+  const ftsSearch = async (searchText: string) => {
+    "use server";
+    const thisSearchResults: any = await call_fts_search(searchText);
+    return thisSearchResults;
+  };
+
   return (
     <div className="flex-1 w-full flex flex-col gap-20 items-center">
       {/* <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
@@ -137,6 +158,7 @@ export default async function Index() {
           updateVerses={changeOutPage}
           getPreviousChapter={prevChapter}
           getNextChapter={nextChapter}
+          fullTextSearch={ftsSearch}
         />
       </div>
 
