@@ -185,7 +185,7 @@ export const First = ({
           </>
         ) : (
           //verses
-          <div className="flex flex-col items-center justify-center gap-1 mb-12 lg:justify-between lg:px-12 w-screen xl:w-4/5 mx-auto prose-xl">
+          <div className="flex flex-col items-center justify-center gap-1 mb-12 lg:justify-between lg:px-12 w-screen xl:w-4/5 mx-auto prose prose-xl">
             {/* way to change chapter */}
             <div className="flex flex-row justify-around xl:justify-between w-screen xl:w-4/5 mx-auto mt-4 mb-8">
               <button className="btn btn-primary" onClick={handlePrevPageClick}>
@@ -197,17 +197,17 @@ export const First = ({
               </button>
             </div>
             <div className="text-center">
-              <h1 className="prose">{currentBookTitle}</h1>
-              <h2 className="prose">Chapter {currentChapterTitle}</h2>
+              <h1>{currentBookTitle}</h1>
+              <h2>Chapter {currentChapterTitle}</h2>
             </div>
-            <div className="pt-10 pb-8 pl-4 pr-3 mt-6 shadow-xl bg-primary sm:mx-auto sm:rounded-lg sm:px-10 md:pl-10 md:pr-12 xl:pl-16 xl:pr-16 2xl:pl-20 2xl:pr-16">
+            <div className="pt-10 pb-8 pl-4 pr-3 sm:mx-auto sm:px-10 md:pl-10 md:pr-12 xl:pl-16 xl:pr-16 2xl:pl-20 2xl:pr-16">
               {theVerses?.map((verse) => (
                 <span
                   key={verse.id.toString()}
-                  className="pl-2 text-sm align-text-bottom text-black text-opacity-75 typeo"
+                  className="pl-2 align-text-bottom"
                 >
                   {verse.full_verse_chapter}
-                  <span className="pl-2 text-lg align-text-top text-opacity-90">
+                  <span className="pl-2 align-text-top">
                     {verse.verse_content}
                   </span>
                 </span>
