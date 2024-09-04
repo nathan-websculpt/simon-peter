@@ -1,3 +1,11 @@
+##### server actions branch
+
+##### this branch may be handy for when users have CRUD needs, but for now (with this being a bunch of reads), it is an anti-pattern
+
+Searching is a good bit faster when not using server actions. I did not think it would be, but ... it's note-worthy
+
+###### back to the regular readme 👇
+
 # Supabase Starter Kit + Drizzle
 
 ### additions made
