@@ -20,8 +20,8 @@
   }
 }
 
-@layer base {
+/* @layer base {
   * {
     @apply border-foreground/20;
   }
-}
+} */
