@@ -294,7 +294,7 @@ export const First = ({
                     {/* button to show/hide chapters */}
                     {isInViewChaptersMode ? (
                       <>
-                        <div className="grid grid-cols-4 gap-4 xl:grid-cols-10 mt-12 xl:mt-24">
+                        <div className="grid grid-cols-4 gap-4 xl:grid-cols-10 mt-12 xl:mt-24 mb-12">
                           {chapters?.chapters?.map((chapter) => (
                             <button
                               className="btn btn-primary"
@@ -310,7 +310,7 @@ export const First = ({
                     ) : (
                       <>
                         {/* buttons to see chapters in a certain book */}
-                        <div className="grid grid-cols-2 gap-4 xl:grid-cols-4 mt-12 xl:mt-24">
+                        <div className="grid grid-cols-2 gap-4 xl:grid-cols-4 mt-12 xl:mt-24 mb-12">
                           {theBooks?.map((book) => (
                             <button
                               className="btn btn-primary"
