@@ -3,7 +3,8 @@ import { createClient } from "@/utils/supabase/server";
 import { First } from "@/components/bible-viewer/first";
 import dynamic from "next/dynamic";
 
-const DynamicHeader = dynamic(() => import("@/components/helpers/WindowHandler"), {
+//This prevents 'window' from throwing error on a server build
+const DynamicScrollTo = dynamic(() => import("@/components/helpers/ScrollTo"), {
   ssr: false,
 });
 
@@ -18,7 +19,6 @@ async function call_app_first_load(version_title: string, book_title: string) {
     console.error("Error calling stored procedure:", error);
     return null;
   }
-  console.log(data[0]);
   return data[0];
   //TODO: try catch for [0]
 }
@@ -33,7 +33,6 @@ async function call_get_chapters_by_book_id(book_id: number) {
     console.error("Error calling stored procedure:", error);
     return null;
   }
-  console.log(data[0]);
   return data[0];
   //TODO: try catch for [0]
 }
@@ -48,7 +47,6 @@ async function call_get_verses_by_chapter_id(chapter_id: number) {
     console.error("Error calling stored procedure:", error);
     return null;
   }
-  console.log(data[0]);
   return data[0];
   //TODO: try catch for [0]
 }
@@ -63,7 +61,6 @@ async function call_get_prev_chapter(chapter_id: number) {
     console.error("Error calling stored procedure:", error);
     return null;
   }
-  console.log(data[0]);
   return data[0];
   //TODO: try catch for [0]
 }
@@ -78,7 +75,6 @@ async function call_get_next_chapter(chapter_id: number) {
     console.error("Error calling stored procedure:", error);
     return null;
   }
-  console.log(data[0]);
   return data[0];
   //TODO: try catch for [0]
 }
@@ -93,7 +89,6 @@ async function call_fts_search(searchText: string) {
     console.error("Error calling stored procedure:", error);
     return null;
   }
-  console.log(data[0]);
   return data[0];
   //TODO: try catch for [0]
 }
@@ -150,7 +145,7 @@ export default async function Index() {
 
   return (
     <>
-      <DynamicHeader />
+      <DynamicScrollTo />
       <div className="flex-1 w-full flex flex-col gap-20 items-center">
         {/* <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
         <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">

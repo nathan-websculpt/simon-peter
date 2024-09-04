@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-export default function WindowHandler() {
+export default function ScrollTo() {
   const [scrollY, setScrollY] = useState(window.scrollY);
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
