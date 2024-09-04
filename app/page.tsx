@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { First } from "@/components/bible-viewer/first";
 import dynamic from "next/dynamic";
 
-const DynamicHeader = dynamic(() => import("@/components/Header"), {
+const DynamicHeader = dynamic(() => import("@/components/helpers/WindowHandler"), {
   ssr: false,
 });
 
