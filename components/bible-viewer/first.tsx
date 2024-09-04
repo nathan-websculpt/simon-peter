@@ -6,15 +6,10 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { LoadingSpinner } from "../helpers/LoadingSpinner";
+import { createClient } from "@/utils/supabase/client";
 
-export const First = ({
-  initApp,
-  updateChapters,
-  updateVerses,
-  getPreviousChapter,
-  getNextChapter,
-  fullTextSearch,
-}: any) => {
+export const First = () => {
+  const supabase = createClient();
   const [isInViewBooksMode, setIsInViewBooksMode] = useState(false);
   const [isInViewChaptersMode, setIsInViewChaptersMode] = useState(false);
 
@@ -33,16 +28,22 @@ export const First = ({
   const [showSearchingSpinner, setShowSearchingSpinner] = useState(false);
 
   useEffect(() => {
-    const doServerAction = async () => {
+    const initialFetch = async () => {
       console.log("initializing");
-      const initData = await initApp(); // contains book/chapter info and that chapter's verses
+
+      const queryParams: object = {
+        version_title: "KJV",
+        book_title: "Genesis",
+      };
+      const initData = await handleRPC("app_first_load", queryParams);
+
       setTheVerses(initData.verses);
       setTheBooks(initData.books);
       setCurrentBookTitle(initData.book.title);
       setCurrentChapterTitle(initData.chapter.chapter_number);
     };
 
-    doServerAction();
+    initialFetch();
   }, []); //remember, this is componentDidMount
 
   //todo: remove this
@@ -55,10 +56,10 @@ export const First = ({
   useEffect(() => {
     if (chapters) {
       setIsInViewChaptersMode(!isInViewChaptersMode);
-      console.log("chapters list:", chapters);
     }
   }, [chapters]);
 
+  //todo: remove this
   useEffect(() => {
     if (theVerses) {
       console.log("verses should be swapped out to... :", theVerses);
@@ -70,53 +71,73 @@ export const First = ({
     setIsInViewChaptersMode(false); //either way, chapter list should be hidden
   };
 
+  const handleRPC = async (
+    funtionToCall: string,
+    queryParams: object
+  ): object => {
+    const { data, error } = await supabase.rpc(funtionToCall, queryParams);
+
+    if (error) {
+      console.error("Error calling stored procedure:", error);
+      return null;
+    }
+    console.log("data from", funtionToCall, " was:", data[0]);
+
+    return data[0];
+  };
+
   const handleChangeBook = async (e) => {
     const bookId = e.target.getAttribute("data-bookid");
-    console.log("bookId:", bookId);
-
-    const thisBooksChapters = await updateChapters(bookId);
-    setChapters(thisBooksChapters);
+    const queryParams: object = {
+      book_id: Number(bookId),
+    };
+    const data = await handleRPC("get_chapters_by_book_id", queryParams);
+    setChapters(data);
   };
 
   const handleChangeChapter = async (e) => {
     const chapterId = e.target.getAttribute("data-chapterid");
-    console.log("chapterId:", chapterId);
+    const queryParams: object = {
+      chapter_id: Number(chapterId),
+    };
+    const data = await handleRPC("get_verses_by_chapter_id", queryParams);
 
-    const this_obj = await updateVerses(chapterId);
-    //setChapters(thisBooksChapters); //TODO: set verses...
-
-    // thisPageInitData.verses = thisChaptersVerses;
-    console.log("This Chapter's Verses:", this_obj);
-    setTheVerses(this_obj.verses);
+    setTheVerses(data.verses);
 
     setIsInViewChaptersMode(false);
     setIsInViewBooksMode(false);
 
-    setCurrentBookTitle(this_obj.book.title);
-    setCurrentChapterId(this_obj.chapter.id);
-    setCurrentChapterTitle(this_obj.chapter.chapter_number.toString());
+    setCurrentBookTitle(data.book.title);
+    setCurrentChapterId(data.chapter.id);
+    setCurrentChapterTitle(data.chapter.chapter_number.toString());
   };
 
   const handlePrevPageClick = async (e) => {
-    const this_obj = await getPreviousChapter(currentChapterId);
-    console.log("PREV CLICK: This Chapter's Verses:", this_obj);
+    const queryParams: object = {
+      chapter_id: Number(currentChapterId),
+    };
+    const data = await handleRPC("get_prev_chapter", queryParams);
+    console.log("PREV CLICK: This Chapter's Verses:", data);
 
-    setTheVerses(this_obj.verses);
+    setTheVerses(data.verses);
 
-    setCurrentBookTitle(this_obj.book.title);
-    setCurrentChapterId(this_obj.chapter.id);
-    setCurrentChapterTitle(this_obj.chapter.chapter_number.toString());
+    setCurrentBookTitle(data.book.title);
+    setCurrentChapterId(data.chapter.id);
+    setCurrentChapterTitle(data.chapter.chapter_number.toString());
   };
 
   const handleNextPageClick = async (e) => {
-    const this_obj = await getNextChapter(currentChapterId);
-    console.log("NEXT CLICK: This Chapter's Verses:", this_obj);
+    const queryParams: object = {
+      chapter_id: currentChapterId,
+    };
+    const data = await handleRPC("get_next_chapter", queryParams);
+    console.log("NEXT CLICK: This Chapter's Verses:", data);
 
-    setTheVerses(this_obj.verses);
+    setTheVerses(data.verses);
 
-    setCurrentBookTitle(this_obj.book.title);
-    setCurrentChapterId(this_obj.chapter.id);
-    setCurrentChapterTitle(this_obj.chapter.chapter_number.toString());
+    setCurrentBookTitle(data.book.title);
+    setCurrentChapterId(data.chapter.id);
+    setCurrentChapterTitle(data.chapter.chapter_number.toString());
   };
 
   const handleSearch = async () => {
@@ -129,8 +150,11 @@ export const First = ({
     newSearchString = newSearchString.replace(/ /g, "+");
     console.log("spaces replaced with +:", newSearchString);
 
-    const this_obj = await fullTextSearch(newSearchString);
-    if (this_obj) setVersesSearched(this_obj.verses);
+    const queryParams: object = {
+      search_by: newSearchString,
+    };
+    const data = await handleRPC("search_fts", queryParams);
+    if (data) setVersesSearched(data.verses);
     setShowSearchingSpinner(false);
   };
   const clearSearch = async () => {
