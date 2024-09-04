@@ -1,6 +1,11 @@
 import AuthButton from "../components/AuthButton";
 import { createClient } from "@/utils/supabase/server";
 import { First } from "@/components/bible-viewer/first";
+import dynamic from "next/dynamic";
+
+const DynamicHeader = dynamic(() => import("@/components/Header"), {
+  ssr: false,
+});
 
 async function call_app_first_load(version_title: string, book_title: string) {
   const supabase = createClient();
@@ -144,29 +149,30 @@ export default async function Index() {
   };
 
   return (
-    <div
-      className="flex-1 w-full flex flex-col gap-20 items-center"
-    >
-      {/* <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
+    <>
+      <DynamicHeader />
+      <div className="flex-1 w-full flex flex-col gap-20 items-center">
+        {/* <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
         <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
           {isSupabaseConnected && <AuthButton />}
         </div>
       </nav> */}
 
-      <div className="flex flex-row mt-6">
-        <First
-          initApp={initApp}
-          updateChapters={getChapters}
-          updateVerses={changeOutPage}
-          getPreviousChapter={prevChapter}
-          getNextChapter={nextChapter}
-          fullTextSearch={ftsSearch}
-        />
-      </div>
+        <div className="flex flex-row mt-6">
+          <First
+            initApp={initApp}
+            updateChapters={getChapters}
+            updateVerses={changeOutPage}
+            getPreviousChapter={prevChapter}
+            getNextChapter={nextChapter}
+            fullTextSearch={ftsSearch}
+          />
+        </div>
 
-      {/* <footer className="w-full border-t border-t-foreground/10 p-8 flex justify-center text-center text-xs">
+        {/* <footer className="w-full border-t border-t-foreground/10 p-8 flex justify-center text-center text-xs">
         <p></p>
       </footer> */}
-    </div>
+      </div>
+    </>
   );
 }
