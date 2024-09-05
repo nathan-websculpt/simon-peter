@@ -13,6 +13,7 @@ import { BaseButtons } from "./BaseButtons";
 import { handleRPC } from "@/utils/handleRPC";
 
 export const Base = () => {
+  const [isInitialized, setIsInitialized] = useState(false);
   const [isInViewBooksMode, setIsInViewBooksMode] = useState(false);
   const [isInViewChaptersMode, setIsInViewChaptersMode] = useState(false);
 
@@ -31,9 +32,13 @@ export const Base = () => {
   const [showSearchingSpinner, setShowSearchingSpinner] = useState(false);
 
   useEffect(() => {
-    const initialFetch = async () => {
-      console.log("initializing");
+    if (!isInitialized) {
+      setIsInitialized(true);
+    }
+  }, []); //remember, this is componentDidMount
 
+  useEffect(() => {
+    const initialFetch = async () => {
       const queryParams: object = {
         version_title: "KJV",
         book_title: "Genesis",
@@ -46,8 +51,8 @@ export const Base = () => {
       setCurrentChapterTitle(initData.chapter.chapter_number);
     };
 
-    initialFetch();
-  }, []); //remember, this is componentDidMount
+    if (isInitialized) initialFetch();
+  }, [isInitialized]);
 
   useEffect(() => {
     if (chapters) {
