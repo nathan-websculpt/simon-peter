@@ -55,7 +55,7 @@ export const VersesSearched = ({
           {verses?.map((verse: any) => (
             <div
               key={verse.id.toString()}
-              className="bg-base-200 my-6 px-4 py-2 flex flex-col"
+              className="bg-base-200 my-6 px-4 py-2 flex flex-col prose prose-2xl"
             >
               <p className="px-2">{verse.verse_content}</p>
               <h5 className="text-right px-4">
