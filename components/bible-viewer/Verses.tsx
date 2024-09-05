@@ -1,3 +1,5 @@
+//verses of a chapter -- like a "page" view
+
 export const Verses = ({verses}: obj) => {
   return (
     <>
