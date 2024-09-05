@@ -17,9 +17,9 @@ export const Base = () => {
   const [isInViewBooksMode, setIsInViewBooksMode] = useState(false);
   const [isInViewChaptersMode, setIsInViewChaptersMode] = useState(false);
 
-  const [theVerses, setTheVerses]: any = useState(null);
+  const [verses, setVerses]: any = useState(null);
   const [chapters, setChapters]: any = useState(null);
-  const [theBooks, setTheBooks]: any = useState(null);
+  const [books, setBooks]: any = useState(null);
 
   const [currentBookTitle, setCurrentBookTitle] = useState("");
   const [currentChapterTitle, setCurrentChapterTitle] = useState("");
@@ -41,8 +41,8 @@ export const Base = () => {
       };
       const initData = await handleRPC("app_first_load", queryParams);
 
-      setTheVerses(initData.verses);
-      setTheBooks(initData.books);
+      setVerses(initData.verses);
+      setBooks(initData.books);
       setCurrentBookTitle(initData.book.title);
       setCurrentChapterTitle(initData.chapter.chapter_number);
     };
@@ -99,7 +99,7 @@ export const Base = () => {
     };
     const data = await handleRPC("get_verses_by_chapter_id", queryParams);
 
-    setTheVerses(data.verses);
+    setVerses(data.verses);
 
     setIsInViewChaptersMode(false);
     setIsInViewBooksMode(false);
@@ -116,7 +116,7 @@ export const Base = () => {
     const data = await handleRPC("get_prev_chapter", queryParams);
     console.log("PREV CLICK: This Chapter's Verses:", data);
 
-    setTheVerses(data.verses);
+    setVerses(data.verses);
 
     setCurrentBookTitle(data.book.title);
     setCurrentChapterId(data.chapter.id);
@@ -130,7 +130,7 @@ export const Base = () => {
     const data = await handleRPC("get_next_chapter", queryParams);
     console.log("NEXT CLICK: This Chapter's Verses:", data);
 
-    setTheVerses(data.verses);
+    setVerses(data.verses);
 
     setCurrentBookTitle(data.book.title);
     setCurrentChapterId(data.chapter.id);
@@ -166,7 +166,7 @@ export const Base = () => {
 
   return (
     <>
-      {!theVerses || theVerses.length === 0 ? (
+      {!verses || verses.length === 0 ? (
         <LoadingSpinner />
       ) : (
         <>
@@ -212,7 +212,7 @@ export const Base = () => {
                       />
                     ) : (
                       <ViewBooks
-                        books={theBooks}
+                        books={books}
                         handleChangeBook={handleChangeBook}
                       />
                     )}
@@ -230,7 +230,7 @@ export const Base = () => {
                       currentChapterTitle={currentChapterTitle}
                     />
 
-                    <Verses verses={theVerses} />
+                    <Verses verses={verses} />
 
                     <PrevNextButtons
                       handlePrevPageClick={handlePrevPageClick}
