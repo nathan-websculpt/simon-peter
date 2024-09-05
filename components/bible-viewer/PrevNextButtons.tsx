@@ -21,7 +21,6 @@ export const PrevNextButtons = ({
       chapter_id: Number(currentChapterId),
     };
     const data = await handleRPC("get_prev_chapter", queryParams);
-    console.log("PREV CLICK: This Chapter's Verses:", data);
 
     setVerses(data.verses);
 
@@ -35,7 +34,6 @@ export const PrevNextButtons = ({
       chapter_id: currentChapterId,
     };
     const data = await handleRPC("get_next_chapter", queryParams);
-    console.log("NEXT CLICK: This Chapter's Verses:", data);
 
     setVerses(data.verses);
 

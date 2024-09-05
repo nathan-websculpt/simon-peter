@@ -27,9 +27,7 @@ export const Search = ({
     setIsUserSearching(true); //this is correct in-that it is not a part of the IF statement
     //process string before searching
     let newSearchString = userSearchInput.replace(/  +/g, " ").trim(); //turn all spaces into one space
-    console.log("multiple spaces turned into one:", newSearchString);
     newSearchString = newSearchString.replace(/ /g, "+");
-    console.log("spaces replaced with +:", newSearchString);
 
     const queryParams: object = {
       search_by: newSearchString,
