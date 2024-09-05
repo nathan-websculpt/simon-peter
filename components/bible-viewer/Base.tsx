@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "../helpers/LoadingSpinner";
-import { createClient } from "@/utils/supabase/client";
 import { PrevNextButtons } from "./PrevNextButtons";
 import { Verses } from "./Verses";
 import { BookDetails } from "./BookDetails";
@@ -11,9 +10,9 @@ import { ViewChapters } from "./ViewChapters";
 import { VersesSearched } from "./VersesSearched";
 import { Search } from "./Search";
 import { BaseButtons } from "./BaseButtons";
+import { handleRPC } from "@/utils/handleRPC";
 
 export const Base = () => {
-  const supabase = createClient();
   const [isInViewBooksMode, setIsInViewBooksMode] = useState(false);
   const [isInViewChaptersMode, setIsInViewChaptersMode] = useState(false);
 
@@ -50,119 +49,11 @@ export const Base = () => {
     initialFetch();
   }, []); //remember, this is componentDidMount
 
-  //todo: remove this
-  useEffect(() => {
-    if (isUserSearching) {
-      console.log("user searching...", versesSearched);
-    }
-  }, [versesSearched, isUserSearching]);
-
   useEffect(() => {
     if (chapters) {
       setIsInViewChaptersMode(!isInViewChaptersMode);
     }
   }, [chapters]);
-
-  const handleToggle = () => {
-    setIsInViewBooksMode(!isInViewBooksMode);
-    setIsInViewChaptersMode(false); //either way, chapter list should be hidden
-  };
-
-  const handleRPC = async (
-    funtionToCall: string,
-    queryParams: object
-  ): object => {
-    const { data, error } = await supabase.rpc(funtionToCall, queryParams);
-
-    if (error) {
-      console.error("Error calling stored procedure:", error);
-      return null;
-    }
-    console.log("data from", funtionToCall, " was:", data[0]);
-
-    return data[0];
-  };
-
-  const handleChangeBook = async (e) => {
-    const bookId = e.target.getAttribute("data-bookid");
-    const queryParams: object = {
-      book_id: Number(bookId),
-    };
-    const data = await handleRPC("get_chapters_by_book_id", queryParams);
-    setChapters(data);
-  };
-
-  const handleChangeChapter = async (e) => {
-    const chapterId = e.target.getAttribute("data-chapterid");
-    const queryParams: object = {
-      chapter_id: Number(chapterId),
-    };
-    const data = await handleRPC("get_verses_by_chapter_id", queryParams);
-
-    setVerses(data.verses);
-
-    setIsInViewChaptersMode(false);
-    setIsInViewBooksMode(false);
-
-    setCurrentBookTitle(data.book.title);
-    setCurrentChapterId(data.chapter.id);
-    setCurrentChapterTitle(data.chapter.chapter_number.toString());
-  };
-
-  const handlePrevPageClick = async (e) => {
-    const queryParams: object = {
-      chapter_id: Number(currentChapterId),
-    };
-    const data = await handleRPC("get_prev_chapter", queryParams);
-    console.log("PREV CLICK: This Chapter's Verses:", data);
-
-    setVerses(data.verses);
-
-    setCurrentBookTitle(data.book.title);
-    setCurrentChapterId(data.chapter.id);
-    setCurrentChapterTitle(data.chapter.chapter_number.toString());
-  };
-
-  const handleNextPageClick = async (e) => {
-    const queryParams: object = {
-      chapter_id: currentChapterId,
-    };
-    const data = await handleRPC("get_next_chapter", queryParams);
-    console.log("NEXT CLICK: This Chapter's Verses:", data);
-
-    setVerses(data.verses);
-
-    setCurrentBookTitle(data.book.title);
-    setCurrentChapterId(data.chapter.id);
-    setCurrentChapterTitle(data.chapter.chapter_number.toString());
-  };
-
-  const handleSearch = async () => {
-    setVersesSearched(null);
-    setShowSearchingSpinner(true);
-    setIsUserSearching(true); //this is correct in-that it is not a part of the IF statement
-    //process string before searching
-    let newSearchString = userSearchInput.replace(/  +/g, " ").trim(); //turn all spaces into one space
-    console.log("multiple spaces turned into one:", newSearchString);
-    newSearchString = newSearchString.replace(/ /g, "+");
-    console.log("spaces replaced with +:", newSearchString);
-
-    const queryParams: object = {
-      search_by: newSearchString,
-    };
-    const data = await handleRPC("search_fts", queryParams);
-    if (data) setVersesSearched(data.verses);
-    setShowSearchingSpinner(false);
-  };
-  const clearSearch = async () => {
-    setVersesSearched(null);
-    setIsUserSearching(false);
-    setUserSearchInput("");
-  };
-
-  const backButtonOnChapters = async () => {
-    setIsInViewChaptersMode(false);
-  };
 
   return (
     <>
@@ -176,8 +67,8 @@ export const Base = () => {
                 <BaseButtons
                   isInViewChaptersMode={isInViewChaptersMode}
                   isInViewBooksMode={isInViewBooksMode}
-                  handleToggle={handleToggle}
-                  backButtonOnChapters={backButtonOnChapters}
+                  setIsInViewBooksMode={setIsInViewBooksMode}
+                  setIsInViewChaptersMode={setIsInViewChaptersMode}
                 />
               )}
 
@@ -186,9 +77,10 @@ export const Base = () => {
                 // the search bar
                 <Search
                   userSearchInput={userSearchInput}
-                  handleSearch={handleSearch}
-                  clearSearch={clearSearch}
                   setUserSearchInput={setUserSearchInput}
+                  setVersesSearched={setVersesSearched}
+                  setIsUserSearching={setIsUserSearching}
+                  setShowSearchingSpinner={setShowSearchingSpinner}
                 />
               )}
             </div>
@@ -207,22 +99,27 @@ export const Base = () => {
                     {/* book-selections will show/hide chapters */}
                     {isInViewChaptersMode ? (
                       <ViewChapters
+                        setVerses={setVerses}
+                        setIsInViewChaptersMode={setIsInViewChaptersMode}
+                        setIsInViewBooksMode={setIsInViewBooksMode}
+                        setCurrentBookTitle={setCurrentBookTitle}
+                        setCurrentChapterTitle={setCurrentChapterTitle}
+                        setCurrentChapterId={setCurrentChapterId}
                         chapters={chapters?.chapters}
-                        handleChangeChapter={handleChangeChapter}
                       />
                     ) : (
-                      <ViewBooks
-                        books={books}
-                        handleChangeBook={handleChangeBook}
-                      />
+                      <ViewBooks books={books} setChapters={setChapters} />
                     )}
                   </>
                 ) : (
                   //prev-next buttons, book-chapter details, and verses
                   <div className="flex flex-col gap-1 mb-12 lg:px-12 xl:w-full mx-auto prose prose-xl">
                     <PrevNextButtons
-                      handlePrevPageClick={handlePrevPageClick}
-                      handleNextPageClick={handleNextPageClick}
+                      currentChapterId={currentChapterId}
+                      setCurrentBookTitle={setCurrentBookTitle}
+                      setCurrentChapterTitle={setCurrentChapterTitle}
+                      setCurrentChapterId={setCurrentChapterId}
+                      setVerses={setVerses}
                     />
 
                     <BookDetails
@@ -233,8 +130,11 @@ export const Base = () => {
                     <Verses verses={verses} />
 
                     <PrevNextButtons
-                      handlePrevPageClick={handlePrevPageClick}
-                      handleNextPageClick={handleNextPageClick}
+                      currentChapterId={currentChapterId}
+                      setCurrentBookTitle={setCurrentBookTitle}
+                      setCurrentChapterTitle={setCurrentChapterTitle}
+                      setCurrentChapterId={setCurrentChapterId}
+                      setVerses={setVerses}
                     />
                   </div>
                 )}

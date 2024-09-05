@@ -1,5 +1,6 @@
 // search bar, clear search button, and search button
 
+import { handleRPC } from "@/utils/handleRPC";
 import {
   MagnifyingGlassCircleIcon,
   XCircleIcon,
@@ -7,17 +8,42 @@ import {
 
 interface SearchProps {
   userSearchInput: string;
-  handleSearch: () => void;
-  clearSearch: () => void;
   setUserSearchInput: (str: string) => void;
+  setVersesSearched: any;
+  setIsUserSearching: (value: boolean) => void;
+  setShowSearchingSpinner: (value: boolean) => void;
 }
 
 export const Search = ({
   userSearchInput,
-  handleSearch,
-  clearSearch,
   setUserSearchInput,
+  setVersesSearched,
+  setIsUserSearching,
+  setShowSearchingSpinner,
 }: SearchProps) => {
+  const handleSearch = async () => {
+    setVersesSearched(null);
+    setShowSearchingSpinner(true);
+    setIsUserSearching(true); //this is correct in-that it is not a part of the IF statement
+    //process string before searching
+    let newSearchString = userSearchInput.replace(/  +/g, " ").trim(); //turn all spaces into one space
+    console.log("multiple spaces turned into one:", newSearchString);
+    newSearchString = newSearchString.replace(/ /g, "+");
+    console.log("spaces replaced with +:", newSearchString);
+
+    const queryParams: object = {
+      search_by: newSearchString,
+    };
+    const data = await handleRPC("search_fts", queryParams);
+    if (data) setVersesSearched(data.verses);
+    setShowSearchingSpinner(false);
+  };
+  const clearSearch = async () => {
+    setVersesSearched(null);
+    setIsUserSearching(false);
+    setUserSearchInput("");
+  };
+
   return (
     <>
       <div className="flex flex-row justify-center w-full gap-1 px-4 mx-auto mb-12 lg:w-11/12 xl:w-3/4 xl:px-0">

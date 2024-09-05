@@ -6,16 +6,25 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 interface BaseButtonsProps {
   isInViewChaptersMode: boolean;
   isInViewBooksMode: boolean;
-  handleToggle: () => void;
-  backButtonOnChapters: () => void;
+  setIsInViewBooksMode: (value: boolean) => void;
+  setIsInViewChaptersMode: (value: boolean) => void;
 }
 
 export const BaseButtons = ({
-  isInViewBooksMode,
   isInViewChaptersMode,
-  handleToggle,
-  backButtonOnChapters,
+  isInViewBooksMode,
+  setIsInViewBooksMode,
+  setIsInViewChaptersMode,
 }: BaseButtonsProps) => {
+  const handleToggle = () => {
+    setIsInViewBooksMode(!isInViewBooksMode);
+    setIsInViewChaptersMode(false); //either way, chapter list should be hidden
+  };
+
+  const backButtonOnChapters = async () => {
+    setIsInViewChaptersMode(false);
+  };
+
   return (
     <>
       <div className="flex flex-row">
