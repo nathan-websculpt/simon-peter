@@ -3,14 +3,18 @@
 import { useEffect, useState } from "react";
 import {
   ArrowLeftIcon,
-  BackwardIcon,
   MagnifyingGlassCircleIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { LoadingSpinner } from "../helpers/LoadingSpinner";
 import { createClient } from "@/utils/supabase/client";
+import { PrevNextButtons } from "./PrevNextButtons";
+import { Verses } from "./Verses";
+import { BookDetails } from "./BookDetails";
+import { ViewBooks } from "./ViewBooks";
+import { ViewChapters } from "./ViewChapters";
 
-export const First = () => {
+export const Base = () => {
   const supabase = createClient();
   const [isInViewBooksMode, setIsInViewBooksMode] = useState(false);
   const [isInViewChaptersMode, setIsInViewChaptersMode] = useState(false);
@@ -332,88 +336,39 @@ export const First = () => {
                     {/* book-selections will show/hide chapters */}
                     {isInViewChaptersMode ? (
                       <>
-                        <div className="grid grid-cols-4 gap-4 xl:grid-cols-10 mt-12 xl:mt-24 mb-12">
-                          {chapters?.chapters?.map((chapter) => (
-                            <button
-                              className="btn btn-primary"
-                              key={chapter.id}
-                              onClick={handleChangeChapter}
-                              data-chapterid={chapter.id}
-                            >
-                              {chapter.chapter_number}
-                            </button>
-                          ))}
-                        </div>
+                        <ViewChapters
+                          chapters={chapters?.chapters}
+                          handleChangeChapter={handleChangeChapter}
+                        />
                       </>
                     ) : (
                       <>
-                        {/* buttons to see chapters in a certain book */}
-                        <div className="grid grid-cols-2 gap-4 xl:grid-cols-4 mt-12 xl:mt-24 mb-12">
-                          {theBooks?.map((book) => (
-                            <button
-                              className="btn btn-primary"
-                              key={book.id}
-                              onClick={handleChangeBook}
-                              data-bookid={book.id}
-                            >
-                              {book.title}
-                            </button>
-                          ))}
-                        </div>
+                        <ViewBooks
+                          books={theBooks}
+                          handleChangeBook={handleChangeBook}
+                        />
                       </>
                     )}
                   </>
                 ) : (
                   //verses
                   <div className="flex flex-col gap-1 mb-12 lg:px-12 xl:w-full mx-auto prose prose-xl">
-                    {/* way to change chapter */}
-                    <div className="flex flex-row justify-around xl:justify-between w-screen xl:w-4/5 mx-auto mt-4 mb-8">
-                      <button
-                        className="btn btn-primary"
-                        onClick={handlePrevPageClick}
-                      >
-                        PREV
-                      </button>
+                    <PrevNextButtons
+                      handlePrevPageClick={handlePrevPageClick}
+                      handleNextPageClick={handleNextPageClick}
+                    />
 
-                      <button
-                        className="btn btn-primary"
-                        onClick={handleNextPageClick}
-                      >
-                        NEXT
-                      </button>
-                    </div>
-                    <div className="text-center">
-                      <h1>{currentBookTitle}</h1>
-                      <h2>Chapter {currentChapterTitle}</h2>
-                    </div>
-                    <div className="pt-10 pb-8 pl-4 pr-3 mx-auto sm:px-10 md:pl-10 md:pr-12 xl:pl-16 xl:pr-16 2xl:pl-20 2xl:pr-16">
-                      {theVerses?.map((verse) => (
-                        <span
-                          key={verse.id.toString()}
-                          className="pl-2 align-text-bottom"
-                        >
-                          {verse.full_verse_chapter}
-                          <span className="pl-2 align-text-top">
-                            {verse.verse_content}
-                          </span>
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex flex-row justify-around xl:justify-between w-screen xl:w-4/5 mx-auto">
-                      <button
-                        className="btn btn-primary"
-                        onClick={handlePrevPageClick}
-                      >
-                        PREV
-                      </button>
+                    <BookDetails
+                      currentBookTitle={currentBookTitle}
+                      currentChapterTitle={currentChapterTitle}
+                    />
 
-                      <button
-                        className="btn btn-primary"
-                        onClick={handleNextPageClick}
-                      >
-                        NEXT
-                      </button>
-                    </div>
+                    <Verses verses={theVerses} />
+
+                    <PrevNextButtons
+                      handlePrevPageClick={handlePrevPageClick}
+                      handleNextPageClick={handleNextPageClick}
+                    />
                   </div>
                 )}
               </>

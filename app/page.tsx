@@ -1,4 +1,4 @@
-import { First } from "@/components/bible-viewer/first";
+import { Base } from "@/components/bible-viewer/Base";
 import dynamic from "next/dynamic";
 
 //This prevents 'window' from throwing error on a server build
@@ -18,7 +18,7 @@ export default async function Index() {
       </nav> */}
 
         <div className="flex flex-row mt-6">
-          <First />
+          <Base />
         </div>
 
         {/* <footer className="w-full border-t border-t-foreground/10 p-8 flex justify-center text-center text-xs">
