@@ -2,15 +2,16 @@
 //When user clicks on a chapter, displays the verses
 
 import { handleRPC } from "@/utils/handleRPC";
+import { Dispatch } from "react";
 
 interface ViewChaptersProps {
-  setVerses: (arr: []) => void;
-  setIsInViewChaptersMode: (bool: boolean) => void;
-  setIsInViewBooksMode: (bool: boolean) => void;
-  setCurrentBookTitle: (str: string) => void;
-  setCurrentChapterTitle: (str: string) => void;
-  setCurrentChapterId: any;
-  chapters: obj;
+  setVerses: Dispatch<[]>;
+  setIsInViewChaptersMode: Dispatch<boolean>;
+  setIsInViewBooksMode: Dispatch<boolean>;
+  setCurrentBookTitle: Dispatch<string>;
+  setCurrentChapterTitle: Dispatch<string>;
+  setCurrentChapterId: Dispatch<number>;
+  chapters: [];
 }
 
 export const ViewChapters = ({
@@ -22,12 +23,12 @@ export const ViewChapters = ({
   setCurrentChapterId,
   chapters,
 }: ViewChaptersProps) => {
-  const handleChangeChapter = async (e) => {
+  const handleChangeChapter = async (e: React.SyntheticEvent) => {
     const chapterId = e.target.getAttribute("data-chapterid");
     const queryParams: object = {
       chapter_id: Number(chapterId),
     };
-    const data = await handleRPC("get_verses_by_chapter_id", queryParams);
+    const data: any = await handleRPC("get_verses_by_chapter_id", queryParams);
 
     setVerses(data.verses);
 
@@ -42,7 +43,7 @@ export const ViewChapters = ({
   return (
     <>
       <div className="grid grid-cols-4 gap-4 xl:grid-cols-10 mt-12 xl:mt-24 mb-12">
-        {chapters?.map((chapter) => (
+        {chapters?.map((chapter: any) => (
           <button
             className="btn btn-primary"
             key={chapter.id}

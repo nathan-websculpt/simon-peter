@@ -5,13 +5,14 @@ import {
   MagnifyingGlassCircleIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
+import { Dispatch } from "react";
 
 interface SearchProps {
   userSearchInput: string;
-  setUserSearchInput: (str: string) => void;
-  setVersesSearched: any;
-  setIsUserSearching: (value: boolean) => void;
-  setShowSearchingSpinner: (value: boolean) => void;
+  setUserSearchInput: Dispatch<string>;
+  setVersesSearched: Dispatch<any>; //todo: change 'any' and null-check below
+  setIsUserSearching: Dispatch<boolean>;
+  setShowSearchingSpinner: Dispatch<boolean>;
 }
 
 export const Search = ({
@@ -32,7 +33,7 @@ export const Search = ({
     const queryParams: object = {
       search_by: newSearchString,
     };
-    const data = await handleRPC("search_fts", queryParams);
+    const data: any = await handleRPC("search_fts", queryParams);
     if (data) setVersesSearched(data.verses);
     setShowSearchingSpinner(false);
   };

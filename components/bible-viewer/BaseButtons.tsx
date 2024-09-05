@@ -1,4 +1,5 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { Dispatch } from "react";
 
 // Buttons that toggle book/chapter view,
 // and the chapter-view contains a back button that will go back to the book view.
@@ -6,8 +7,8 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 interface BaseButtonsProps {
   isInViewChaptersMode: boolean;
   isInViewBooksMode: boolean;
-  setIsInViewBooksMode: (value: boolean) => void;
-  setIsInViewChaptersMode: (value: boolean) => void;
+  setIsInViewBooksMode: Dispatch<boolean>;
+  setIsInViewChaptersMode: Dispatch<boolean>;
 }
 
 export const BaseButtons = ({

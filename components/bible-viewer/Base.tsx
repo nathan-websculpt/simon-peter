@@ -17,6 +17,7 @@ export const Base = () => {
   const [isInViewBooksMode, setIsInViewBooksMode] = useState(false);
   const [isInViewChaptersMode, setIsInViewChaptersMode] = useState(false);
 
+  //TODO: look for null-breaks and checks before moving away from ':any' here
   const [verses, setVerses]: any = useState(null);
   const [chapters, setChapters]: any = useState(null);
   const [books, setBooks]: any = useState(null);
@@ -35,7 +36,7 @@ export const Base = () => {
     if (!isInitialized) {
       setIsInitialized(true);
     }
-  }, []); //remember, this is componentDidMount
+  }, []); //componentDidMount
 
   useEffect(() => {
     const initialFetch = async () => {
@@ -43,7 +44,7 @@ export const Base = () => {
         version_title: "KJV",
         book_title: "Genesis",
       };
-      const initData = await handleRPC("app_first_load", queryParams);
+      const initData: any = await handleRPC("app_first_load", queryParams);
 
       setVerses(initData.verses);
       setBooks(initData.books);
@@ -110,7 +111,7 @@ export const Base = () => {
                         setCurrentBookTitle={setCurrentBookTitle}
                         setCurrentChapterTitle={setCurrentChapterTitle}
                         setCurrentChapterId={setCurrentChapterId}
-                        chapters={chapters?.chapters}
+                        chapters={chapters}
                       />
                     ) : (
                       <ViewBooks books={books} setChapters={setChapters} />

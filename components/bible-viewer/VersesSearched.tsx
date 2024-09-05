@@ -4,7 +4,7 @@ import { LoadingSpinner } from "../helpers/LoadingSpinner";
 //displayed differently than in Verses.tsx
 
 interface VersesSearchedProps {
-  verses: any;
+  verses: [];
   showSearchingSpinner: boolean;
 }
 
@@ -52,7 +52,7 @@ export const VersesSearched = ({
             </>
           )}
 
-          {verses?.map((verse) => (
+          {verses?.map((verse: any) => (
             <div
               key={verse.id.toString()}
               className="bg-base-200 my-6 px-4 py-2 flex flex-col"

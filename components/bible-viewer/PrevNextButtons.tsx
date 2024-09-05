@@ -1,13 +1,14 @@
 // way to change chapters with Prev/Next buttons
 
 import { handleRPC } from "@/utils/handleRPC";
+import { Dispatch } from "react";
 
 interface PrevNextProps {
   currentChapterId: number;
-  setCurrentBookTitle: (str: string) => void;
-  setCurrentChapterTitle: (str: string) => void;
-  setCurrentChapterId: (str: string) => void;
-  setVerses: (arr: []) => void;
+  setCurrentBookTitle: Dispatch<string>;
+  setCurrentChapterTitle: Dispatch<string>;
+  setCurrentChapterId: Dispatch<number>;
+  setVerses: Dispatch<[]>;
 }
 export const PrevNextButtons = ({
   currentChapterId,
@@ -16,11 +17,11 @@ export const PrevNextButtons = ({
   setCurrentChapterId,
   setVerses,
 }: PrevNextProps) => {
-  const handlePrevPageClick = async (e) => {
+  const handlePrevPageClick = async (e: React.SyntheticEvent) => {
     const queryParams: object = {
       chapter_id: Number(currentChapterId),
     };
-    const data = await handleRPC("get_prev_chapter", queryParams);
+    const data: any = await handleRPC("get_prev_chapter", queryParams);
 
     setVerses(data.verses);
 
@@ -29,11 +30,11 @@ export const PrevNextButtons = ({
     setCurrentChapterTitle(data.chapter.chapter_number.toString());
   };
 
-  const handleNextPageClick = async (e) => {
+  const handleNextPageClick = async (e: React.SyntheticEvent) => {
     const queryParams: object = {
       chapter_id: currentChapterId,
     };
-    const data = await handleRPC("get_next_chapter", queryParams);
+    const data: any = await handleRPC("get_next_chapter", queryParams);
 
     setVerses(data.verses);
 
