@@ -1,5 +1,5 @@
 -- Handy if you want to create all tables and add some data in one go locally
-
+-- OLD (as of sep. 6th, 2024)
 
 CREATE EXTENSION IF NOT EXISTS "citext" WITH SCHEMA "public";
 

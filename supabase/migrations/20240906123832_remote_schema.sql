@@ -1,10 +1,4 @@
--- Made when db was ready, before data went into it
--- RLS is enabled, but no policies are made
--- contains testament, book, chapter, verse, version tables
--- with citext extension added
--- and a fast text search index on verse_content
-    -- with an added column to bible_verse that generates the to_tsvector() of verse_content
-    
+
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -82,6 +76,297 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 
 
+
+
+CREATE OR REPLACE FUNCTION "public"."app_first_load"("version_title" "text", "book_title" "text") RETURNS SETOF "json"
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+  min_chapter_id integer;
+BEGIN
+  -- get first chapter id in table that is in this version (EX: KJV)
+  SELECT MIN(v.id) INTO min_chapter_id   
+  FROM bible_verse v
+  INNER JOIN bible_chapter c
+    ON v.bible_chapter_id = c.id    
+  INNER JOIN bible_book b
+    ON c.bible_book_id = b.id
+  INNER JOIN bible_version bv
+    ON b.bible_version_id = bv.id
+  WHERE bv.title = version_title;
+
+
+
+ RETURN 
+ QUERY
+ SELECT json_build_object(
+  'book', (
+    SELECT (row_to_json(q1))
+    FROM (
+      -- Query here
+      SELECT b.id, b.title 
+      from bible_book b
+      LEFT JOIN bible_chapter c
+      ON b.id = c.bible_book_id
+    WHERE c.id = min_chapter_id
+    ) q1
+  ),
+  'chapter', (
+    SELECT (row_to_json(q2))
+    FROM (
+      -- Query here
+      SELECT c.id, c.chapter_number
+      from bible_chapter c
+    WHERE c.id = min_chapter_id
+    ) q2
+  ),
+  'books', (
+    SELECT json_agg(row_to_json(q3))
+    FROM (
+      -- Your first query here
+      SELECT b.id, b.title 
+      from bible_book b
+      ORDER BY b.id asc
+    ) q3
+  ),
+  'verses', (
+    SELECT json_agg(row_to_json(q4))
+    FROM (
+      -- Your second query here
+      select v.id, v.verse_content, v.full_verse_chapter
+      from bible_verse v
+    WHERE v.bible_chapter_id = min_chapter_id
+    ORDER BY v.id asc
+    ) q4
+  )
+) AS combined_results;
+  
+END;
+$$;
+
+
+ALTER FUNCTION "public"."app_first_load"("version_title" "text", "book_title" "text") OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."get_chapters_by_book_id"("book_id" integer) RETURNS SETOF "json"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+
+return
+query
+  SELECT json_build_object(
+  'chapters', (
+    SELECT json_agg(row_to_json(q1))
+    FROM (
+      SELECT c.id, c.chapter_number 
+      from bible_chapter c
+      where c.bible_book_id = book_id
+      ORDER BY c.chapter_number
+    ) q1
+  )
+) AS combined_results;
+  
+END;
+$$;
+
+
+ALTER FUNCTION "public"."get_chapters_by_book_id"("book_id" integer) OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."get_next_chapter"("chapter_id" integer) RETURNS SETOF "json"
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+  next_chapter_id integer;
+  max_chapter_id integer;
+BEGIN
+  -- get last chapter in table
+  SELECT MAX(c.id) INTO max_chapter_id
+  FROM bible_chapter c;
+
+IF chapter_id = max_chapter_id THEN
+  next_chapter_id := chapter_id;
+ELSE
+SELECT MIN(c.id) INTO next_chapter_id
+FROM bible_chapter c
+WHERE c.id > chapter_id;
+END IF;
+
+return
+query
+  SELECT json_build_object(
+  'book', (
+    SELECT (row_to_json(q1))
+    FROM (
+      -- Query here
+      SELECT b.id, b.title 
+      from bible_book b
+      LEFT JOIN bible_chapter c
+      ON b.id = c.bible_book_id
+    WHERE c.id = next_chapter_id
+    ) q1
+  ),
+  'chapter', (
+    SELECT (row_to_json(q2))
+    FROM (
+      -- Query here
+      SELECT c.id, c.chapter_number
+      from bible_chapter c
+    WHERE c.id = next_chapter_id
+    ) q2
+  ),
+  'verses', (
+    SELECT json_agg(row_to_json(q3))
+    FROM (
+      SELECT v.id, v.verse_content, v.full_verse_chapter
+      from bible_verse v
+      where v.bible_chapter_id = next_chapter_id
+    ORDER BY v.id asc
+    ) q3
+  )
+) AS combined_results;
+  
+END;
+$$;
+
+
+ALTER FUNCTION "public"."get_next_chapter"("chapter_id" integer) OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."get_prev_chapter"("chapter_id" integer) RETURNS SETOF "json"
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+  prev_chapter_id integer;
+  min_chapter_id integer;
+BEGIN
+  -- get first chapter in table
+  SELECT MIN(c.id) INTO min_chapter_id
+  FROM bible_chapter c;
+
+IF chapter_id = min_chapter_id THEN  
+  prev_chapter_id := chapter_id;
+ELSE
+  SELECT MAX(c.id) INTO prev_chapter_id
+  FROM bible_chapter c
+  WHERE c.id < chapter_id;
+  END IF;
+
+  return
+  query
+    SELECT json_build_object(
+  'book', (
+    SELECT (row_to_json(q1))
+    FROM (
+      -- Query here
+      SELECT b.id, b.title 
+      from bible_book b
+      LEFT JOIN bible_chapter c
+      ON b.id = c.bible_book_id
+    WHERE c.id = prev_chapter_id
+    ) q1
+  ),
+  'chapter', (
+    SELECT (row_to_json(q2))
+    FROM (
+      -- Query here
+      SELECT c.id, c.chapter_number
+      from bible_chapter c
+    WHERE c.id = prev_chapter_id
+    ) q2
+  ),
+    'verses', (
+      SELECT json_agg(row_to_json(q3))
+      FROM (
+        SELECT v.id, v.verse_content, v.full_verse_chapter
+        from bible_verse v
+        where v.bible_chapter_id = prev_chapter_id
+    ORDER BY v.id asc
+      ) q3
+    )
+  ) AS combined_results;
+  
+END;
+$$;
+
+
+ALTER FUNCTION "public"."get_prev_chapter"("chapter_id" integer) OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."get_verses_by_chapter_id"("chapter_id" integer) RETURNS SETOF "json"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+
+return
+query
+  SELECT json_build_object(
+  'book', (
+    SELECT (row_to_json(q1))
+    FROM (
+      -- Query here
+      SELECT b.id, b.title 
+      from bible_book b
+      LEFT JOIN bible_chapter c
+      ON b.id = c.bible_book_id
+    WHERE c.id = chapter_id
+    ) q1
+  ),
+  'chapter', (
+    SELECT (row_to_json(q2))
+    FROM (
+      -- Query here
+      SELECT c.id, c.chapter_number
+      from bible_chapter c
+    WHERE c.id = chapter_id
+    ) q2
+  ),
+  'verses', (
+    SELECT json_agg(row_to_json(q3))
+    FROM (
+      SELECT v.id, v.verse_content, v.full_verse_chapter
+      from bible_verse v
+      where v.bible_chapter_id = chapter_id
+    ORDER BY v.id asc
+    ) q3
+  )
+) AS combined_results;
+  
+END;
+$$;
+
+
+ALTER FUNCTION "public"."get_verses_by_chapter_id"("chapter_id" integer) OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."search_fts"("search_by" character varying) RETURNS SETOF "json"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+
+return
+query
+  SELECT json_build_object(
+  'verses', (
+    SELECT json_agg(row_to_json(q1))
+    FROM (
+      select v.id, b.id as book_id, b.title as book_title, v.full_verse_chapter, v.verse_content
+      from bible_verse v
+      LEFT JOIN bible_chapter c
+      ON v.bible_chapter_id = c.id
+      LEFT JOIN bible_book b
+      ON c.bible_book_id = b.id
+      where fts_doc_en @@ to_tsquery(search_by)
+    ) q1
+  )
+) AS combined_results;
+  
+END;
+$$;
+
+
+ALTER FUNCTION "public"."search_fts"("search_by" character varying) OWNER TO "postgres";
 
 SET default_tablespace = '';
 
@@ -351,6 +636,26 @@ ALTER TABLE ONLY "public"."bible_verse"
 
 
 
+CREATE POLICY "Enable read access for all users" ON "public"."bible_book" FOR SELECT USING (true);
+
+
+
+CREATE POLICY "Enable read access for all users" ON "public"."bible_chapter" FOR SELECT USING (true);
+
+
+
+CREATE POLICY "Enable read access for all users" ON "public"."bible_testament" FOR SELECT USING (true);
+
+
+
+CREATE POLICY "Enable read access for all users" ON "public"."bible_verse" FOR SELECT USING (true);
+
+
+
+CREATE POLICY "Enable read access for all users" ON "public"."bible_version" FOR SELECT USING (true);
+
+
+
 ALTER TABLE "public"."bible_book" ENABLE ROW LEVEL SECURITY;
 
 
@@ -616,6 +921,12 @@ GRANT ALL ON FUNCTION "public"."citext"("inet") TO "service_role";
 
 
 
+GRANT ALL ON FUNCTION "public"."app_first_load"("version_title" "text", "book_title" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."app_first_load"("version_title" "text", "book_title" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."app_first_load"("version_title" "text", "book_title" "text") TO "service_role";
+
+
+
 GRANT ALL ON FUNCTION "public"."citext_cmp"("public"."citext", "public"."citext") TO "postgres";
 GRANT ALL ON FUNCTION "public"."citext_cmp"("public"."citext", "public"."citext") TO "anon";
 GRANT ALL ON FUNCTION "public"."citext_cmp"("public"."citext", "public"."citext") TO "authenticated";
@@ -728,6 +1039,30 @@ GRANT ALL ON FUNCTION "public"."citext_smaller"("public"."citext", "public"."cit
 
 
 
+GRANT ALL ON FUNCTION "public"."get_chapters_by_book_id"("book_id" integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_chapters_by_book_id"("book_id" integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_chapters_by_book_id"("book_id" integer) TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."get_next_chapter"("chapter_id" integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_next_chapter"("chapter_id" integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_next_chapter"("chapter_id" integer) TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."get_prev_chapter"("chapter_id" integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_prev_chapter"("chapter_id" integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_prev_chapter"("chapter_id" integer) TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."get_verses_by_chapter_id"("chapter_id" integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_verses_by_chapter_id"("chapter_id" integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_verses_by_chapter_id"("chapter_id" integer) TO "service_role";
+
+
+
 GRANT ALL ON FUNCTION "public"."regexp_match"("public"."citext", "public"."citext") TO "postgres";
 GRANT ALL ON FUNCTION "public"."regexp_match"("public"."citext", "public"."citext") TO "anon";
 GRANT ALL ON FUNCTION "public"."regexp_match"("public"."citext", "public"."citext") TO "authenticated";
@@ -802,6 +1137,12 @@ GRANT ALL ON FUNCTION "public"."replace"("public"."citext", "public"."citext", "
 GRANT ALL ON FUNCTION "public"."replace"("public"."citext", "public"."citext", "public"."citext") TO "anon";
 GRANT ALL ON FUNCTION "public"."replace"("public"."citext", "public"."citext", "public"."citext") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."replace"("public"."citext", "public"."citext", "public"."citext") TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."search_fts"("search_by" character varying) TO "anon";
+GRANT ALL ON FUNCTION "public"."search_fts"("search_by" character varying) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."search_fts"("search_by" character varying) TO "service_role";
 
 
 
