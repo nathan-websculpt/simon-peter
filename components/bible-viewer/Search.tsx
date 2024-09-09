@@ -51,7 +51,7 @@ export const Search = ({
     if (searchType === "advanced")
       newSearchString = newSearchString.replace(/ /g, " & "); //turn spaces into ' & '
 
-    console.log("doing an ", searchType, " search for: ", newSearchString);
+    console.log("doing a ", searchType, " search for: ", newSearchString);
 
     const queryParams: object = {
       search_by: newSearchString,

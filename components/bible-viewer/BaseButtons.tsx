@@ -114,7 +114,7 @@ export const BaseButtons = ({
         </>
       )}
 
-      {/* thi back button is only on the chapters page - takes you back to the book list */}
+      {/* this back button is only on the chapters page - takes you back to the book list */}
       {!isMenuOpen && isInViewChaptersMode && (
         <>
           {/* <div className="flex flex-col"> */}
