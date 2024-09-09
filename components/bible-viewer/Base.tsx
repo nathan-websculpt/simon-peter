@@ -11,6 +11,7 @@ import { VersesSearched } from "./VersesSearched";
 import { Search } from "./Search";
 import { BaseButtons } from "./BaseButtons";
 import { handleRPC } from "@/utils/handleRPC";
+import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 
 export const Base = () => {
   const [isInitialized, setIsInitialized] = useState(false);
@@ -88,18 +89,22 @@ export const Base = () => {
       </div>
       {isMenuOpen ? (
         <>
-          <div className="w-screen h-screen flex flex-col prose">
+          <div className="w-screen flex flex-col prose">
             <div
               className="border-t border-b border-gray-300 cursor-pointer"
               onClick={() => handleSearchTypeSelection("simple")}
             >
               <div className="pl-12 pr-6 py-12">
-                <h1>Simple Search</h1>
-                <p>
+                <h1 className="underline">Simple Search</h1>
+                <p className="prose-lg xl:prose-xl">
                   A more-rigid and slower search without the help of the
-                  thesaurus. Use this if you know what you are looking for.
+                  thesaurus.
+                  <br />
+                  Use this if you know what you are looking for.
+                  <br />
+                  performs: WHERE Verse LIKE '%YOUR_QUERY%'
                 </p>
-                <p>performs: WHERE Verse LIKE '%YOUR_QUERY%'</p>
+                <ArrowRightCircleIcon className="w-8 h-8 float-right" />
               </div>
             </div>
 
@@ -108,9 +113,13 @@ export const Base = () => {
               onClick={() => handleSearchTypeSelection("phrase")}
             >
               <div className="pl-12 pr-6 py-12">
-                <h1>Phrase Search</h1>
-                <p>A full-search against a phrase</p>
-                <p>performs a phraseto_tsquery()</p>
+                <h1 className="underline">Phrase Search</h1>
+                <p className="prose-lg xl:prose-xl">
+                  A full-search against a phrase.
+                  <br />
+                  performs a phraseto_tsquery().
+                </p>
+                <ArrowRightCircleIcon className="w-8 h-8 float-right" />
               </div>
             </div>
 
@@ -119,13 +128,16 @@ export const Base = () => {
               onClick={() => handleSearchTypeSelection("advanced")}
             >
               <div className="pl-12 pr-6 py-12">
-                <h1>Advanced Search</h1>
-                <p>
+                <h1 className="underline">Advanced Search</h1>
+                <p className="prose-lg xl:prose-xl">
                   The app will replace your spaces for &s to perform a
-                  full-search
+                  full-search.
+                  <br />
+                  This will return more than what you are looking for.
+                  <br />
+                  performs a to_tsquery().
                 </p>
-                <p>This will return more than what you are looking for</p>
-                <p>performs a to_tsquery()</p>
+                <ArrowRightCircleIcon className="w-8 h-8 float-right" />
               </div>
             </div>
 
@@ -134,10 +146,10 @@ export const Base = () => {
               onClick={() => handleSearchTypeSelection("custom")}
             >
               <div className="pl-12 pr-6 py-12">
-                <h1>Custom Search</h1>
-                <p>
+                <h1 className="underline">Custom Search</h1>
+                <p className="prose-lg xl:prose-xl">
                   Use this if you have done this sort of thing before, as you
-                  will have to type your own query string
+                  will have to type your own query string:
                   <br />
                   '&' = <i>and</i>
                   <br />
@@ -145,11 +157,12 @@ export const Base = () => {
                   <br />
                   '!' = <i>negation</i>
                 </p>
-                <p>
+                <p className="prose-lg xl:prose-xl">
                   Ex: "search for verses that contain <i>David</i> and{" "}
                   <i>Nathan</i> but not <i>King</i>":{" "}
                   <em>david & nathan & !king</em>
                 </p>
+                <ArrowRightCircleIcon className="w-8 h-8 float-right" />
               </div>
             </div>
           </div>
