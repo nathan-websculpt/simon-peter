@@ -98,14 +98,14 @@ export const BaseButtons = ({
         <>
           {isMenuOpen ? (
             <button
-              className="btn btn-circle btn-primary"
+              className="btn btn-circle btn-primary mr-4 xl:mr-0"
               onClick={() => setIsMenuOpen(false)}
             >
               <XMarkIcon className="w-6 h-6" />
             </button>
           ) : (
             <button
-              className="btn btn-circle btn-primary"
+              className="btn btn-circle btn-primary mr-4 xl:mr-0"
               onClick={() => setIsMenuOpen(true)}
             >
               <Bars4Icon className="w-6 h-6" />
@@ -117,14 +117,12 @@ export const BaseButtons = ({
       {/* this back button is only on the chapters page - takes you back to the book list */}
       {!isMenuOpen && isInViewChaptersMode && (
         <>
-          {/* <div className="flex flex-col"> */}
           <button
-            className="btn-circle btn btn-primary"
+            className="btn-circle btn btn-primary ml-4"
             onClick={backButtonOnChapters}
           >
             <ArrowLeftIcon className="w-6 h-6" />
           </button>
-          {/* </div> */}
         </>
       )}
     </>

@@ -39,13 +39,6 @@ export const VersesSearched = ({
                           <strong>John 1:1</strong> (and others)
                         </p>
                       </li>
-                      <li>
-                        <p>
-                          Searching for <strong>"in the"</strong> will not
-                          return anything, but a search for{" "}
-                          <strong>"in the beginning"</strong> will
-                        </p>
-                      </li>
                     </ul>
                   </div>
                 ))}

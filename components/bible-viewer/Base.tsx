@@ -12,6 +12,7 @@ import { Search } from "./Search";
 import { BaseButtons } from "./BaseButtons";
 import { handleRPC } from "@/utils/handleRPC";
 import { BaseMenu } from "./BaseMenu";
+import { cn } from "@/lib/utils";
 
 export const Base = () => {
   const [isInitialized, setIsInitialized] = useState(false);
@@ -68,7 +69,17 @@ export const Base = () => {
 
   return (
     <>
-      <div className="flex flex-row justify-between w-full xl:w-4/5 mt-2 xl:mt-6">
+      <div
+        className={cn("flex flex-row w-full xl:w-4/5 mt-2 xl:mt-6", {
+          "justify-between": !(
+            isInViewBooksMode ||
+            isInViewChaptersMode ||
+            isMenuOpen
+          ),
+          "justify-end":
+            isMenuOpen && !(isInViewBooksMode || isInViewChaptersMode),
+        })}
+      >
         <BaseButtons
           isInViewChaptersMode={isInViewChaptersMode}
           isInViewBooksMode={isInViewBooksMode}
@@ -87,6 +98,9 @@ export const Base = () => {
             setIsMenuOpen={setIsMenuOpen}
             setSearchType={setSearchType}
             setIsInSearchMode={setIsInSearchMode}
+            setVersesSearched={setVersesSearched}
+            setIsUserSearching={setIsUserSearching}
+            setUserSearchInput={setUserSearchInput}
           />
         </>
       ) : (
@@ -112,69 +126,62 @@ export const Base = () => {
                   )}
               </div>
 
-              {isUserSearching ? (
-                // user is searching
-                <VersesSearched
-                  verses={versesSearched}
-                  showSearchingSpinner={showSearchingSpinner}
-                />
+              {isInSearchMode || isUserSearching ? (
+                <>
+                  <h1 className="prose prose-lg">you are in {searchType} search mode</h1>
+                  {isUserSearching && (
+                    <VersesSearched
+                      verses={versesSearched}
+                      showSearchingSpinner={showSearchingSpinner}
+                    />
+                  )}
+                </>
               ) : (
                 //user is not searching
                 <>
-                  {isInSearchMode ? (
+                  {isInViewBooksMode ? (
                     <>
-                      <h1>you are in {searchType} search mode</h1>
-                    </>
-                  ) : (
-                    <>
-                      {isInViewBooksMode ? (
-                        <>
-                          {/* book-selections will show/hide chapters */}
-                          {isInViewChaptersMode ? (
-                            <ViewChapters
-                              setVerses={setVerses}
-                              setIsInViewChaptersMode={setIsInViewChaptersMode}
-                              setIsInViewBooksMode={setIsInViewBooksMode}
-                              setCurrentBookTitle={setCurrentBookTitle}
-                              setCurrentChapterTitle={setCurrentChapterTitle}
-                              setCurrentChapterId={setCurrentChapterId}
-                              chapters={chapters}
-                            />
-                          ) : (
-                            <ViewBooks
-                              books={books}
-                              setChapters={setChapters}
-                            />
-                          )}
-                        </>
+                      {/* book-selections will show/hide chapters */}
+                      {isInViewChaptersMode ? (
+                        <ViewChapters
+                          setVerses={setVerses}
+                          setIsInViewChaptersMode={setIsInViewChaptersMode}
+                          setIsInViewBooksMode={setIsInViewBooksMode}
+                          setCurrentBookTitle={setCurrentBookTitle}
+                          setCurrentChapterTitle={setCurrentChapterTitle}
+                          setCurrentChapterId={setCurrentChapterId}
+                          chapters={chapters}
+                        />
                       ) : (
-                        //prev-next buttons, book-chapter details, and verses
-                        <div className="flex flex-col gap-1 mb-4 lg:px-12 xl:w-full mx-auto prose prose-xl">
-                          <PrevNextButtons
-                            currentChapterId={currentChapterId}
-                            setCurrentBookTitle={setCurrentBookTitle}
-                            setCurrentChapterTitle={setCurrentChapterTitle}
-                            setCurrentChapterId={setCurrentChapterId}
-                            setVerses={setVerses}
-                          />
-
-                          <BookDetails
-                            currentBookTitle={currentBookTitle}
-                            currentChapterTitle={currentChapterTitle}
-                          />
-
-                          <Verses verses={verses} />
-
-                          <PrevNextButtons
-                            currentChapterId={currentChapterId}
-                            setCurrentBookTitle={setCurrentBookTitle}
-                            setCurrentChapterTitle={setCurrentChapterTitle}
-                            setCurrentChapterId={setCurrentChapterId}
-                            setVerses={setVerses}
-                          />
-                        </div>
+                        <ViewBooks books={books} setChapters={setChapters} />
                       )}
                     </>
+                  ) : (
+                    //prev-next buttons, book-chapter details, and verses
+                    <div className="flex flex-col gap-1 mb-4 lg:px-12 xl:w-full mx-auto prose prose-xl">
+                      <PrevNextButtons
+                        currentChapterId={currentChapterId}
+                        setCurrentBookTitle={setCurrentBookTitle}
+                        setCurrentChapterTitle={setCurrentChapterTitle}
+                        setCurrentChapterId={setCurrentChapterId}
+                        setVerses={setVerses}
+                      />
+
+                      <BookDetails
+                        currentBookTitle={currentBookTitle}
+                        currentChapterTitle={currentChapterTitle}
+                      />
+
+                      <Verses verses={verses} />
+
+                      <PrevNextButtons
+                        currentChapterId={currentChapterId}
+                        setCurrentBookTitle={setCurrentBookTitle}
+                        setCurrentChapterTitle={setCurrentChapterTitle}
+                        setCurrentChapterId={setCurrentChapterId}
+                        setVerses={setVerses}
+                      />
+                    </div>
                   )}
                 </>
               )}

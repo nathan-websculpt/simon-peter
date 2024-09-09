@@ -7,17 +7,28 @@ interface BaseMenuProps {
   setSearchType: Dispatch<string>;
   setIsMenuOpen: Dispatch<boolean>;
   setIsInSearchMode: Dispatch<boolean>;
+  setVersesSearched: Dispatch<[]>;
+  setIsUserSearching: Dispatch<boolean>;
+  setUserSearchInput: Dispatch<string>;
 }
 
 export const BaseMenu = ({
   setSearchType,
   setIsMenuOpen,
   setIsInSearchMode,
+  setVersesSearched,
+  setIsUserSearching,
+  setUserSearchInput,
 }: BaseMenuProps) => {
   const handleSearchTypeSelection = (typeSelected: string) => {
     setSearchType(typeSelected);
     setIsMenuOpen(false);
     setIsInSearchMode(true);
+    
+    //clear previously searched verses
+    setVersesSearched(null);
+    setIsUserSearching(false);
+    setUserSearchInput("");
   };
   return (
     <>
@@ -46,7 +57,7 @@ export const BaseMenu = ({
           <div className="pl-12 pr-6 py-12">
             <h1 className="underline">Phrase Search</h1>
             <p className="prose-lg xl:prose-xl">
-              A full-search against a phrase.
+              A full-search against a phrase (with the thesaurus).
               <br />
               performs a phraseto_tsquery().
             </p>
