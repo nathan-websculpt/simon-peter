@@ -98,14 +98,14 @@ export const BaseButtons = ({
         <>
           {isMenuOpen ? (
             <button
-              className="btn btn-circle btn-ghost btn-primary"
+              className="btn btn-circle btn-primary"
               onClick={() => setIsMenuOpen(false)}
             >
               <XMarkIcon className="w-6 h-6" />
             </button>
           ) : (
             <button
-              className="btn btn-circle btn-ghost btn-primary"
+              className="btn btn-circle btn-primary"
               onClick={() => setIsMenuOpen(true)}
             >
               <Bars4Icon className="w-6 h-6" />

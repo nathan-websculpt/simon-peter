@@ -34,17 +34,7 @@ export const Base = () => {
   const [showSearchingSpinner, setShowSearchingSpinner] = useState(false);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchType, setSearchType] = useState("simple");
-
-  //useEffect for searchType
-
-  useEffect(() => {
-    console.log("searchType", searchType);
-    if (isMenuOpen) {
-      setIsMenuOpen(false);
-      setIsInSearchMode(true);
-    }
-  }, [searchType]);
+  const [searchType, setSearchType] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isInitialized) {
@@ -75,6 +65,12 @@ export const Base = () => {
     }
   }, [chapters]);
 
+  const handleSearchTypeSelection = (typeSelected: string) => {
+    setSearchType(typeSelected);
+    setIsMenuOpen(false);
+    setIsInSearchMode(true);
+  };
+
   return (
     <>
       <div className="flex flex-row justify-between w-full xl:w-4/5 mt-2 xl:mt-6">
@@ -95,56 +91,67 @@ export const Base = () => {
           <div className="w-screen h-screen flex flex-col prose">
             <div
               className="border-t border-b border-gray-300 cursor-pointer"
-              onClick={() => setSearchType("simple")}
+              onClick={() => handleSearchTypeSelection("simple")}
             >
               <div className="pl-12 pr-6 py-12">
                 <h1>Simple Search</h1>
                 <p>
-                  A rigid and slower search without the help of the thesaurus.
-                  Use this if you know what you are looking for.
+                  A more-rigid and slower search without the help of the
+                  thesaurus. Use this if you know what you are looking for.
                 </p>
+                <p>performs: WHERE Verse LIKE '%YOUR_QUERY%'</p>
               </div>
             </div>
 
-            
             <div
               className="border-t border-b border-gray-300 cursor-pointer"
-              onClick={() => setSearchType("phrase")}
+              onClick={() => handleSearchTypeSelection("phrase")}
             >
               <div className="pl-12 pr-6 py-12">
-              <h1>Phrase Search</h1>
-              <p>lorem</p>
+                <h1>Phrase Search</h1>
+                <p>A full-search against a phrase</p>
+                <p>performs a phraseto_tsquery()</p>
               </div>
             </div>
 
-            
             <div
               className="border-t border-b border-gray-300 cursor-pointer"
-              onClick={() => setSearchType("advanced")}
+              onClick={() => handleSearchTypeSelection("advanced")}
             >
               <div className="pl-12 pr-6 py-12">
                 <h1>Advanced Search</h1>
                 <p>
-                  A rigid and slower search without the help of the thesaurus.
-                  Use this if you know what you are looking for.
+                  The app will replace your spaces for &s to perform a
+                  full-search
                 </p>
+                <p>This will return more than what you are looking for</p>
+                <p>performs a to_tsquery()</p>
               </div>
             </div>
 
-            
             <div
               className="border-t border-b border-gray-300 cursor-pointer"
-              onClick={() => setSearchType("custom")}
+              onClick={() => handleSearchTypeSelection("custom")}
             >
               <div className="pl-12 pr-6 py-12">
                 <h1>Custom Search</h1>
                 <p>
-                  A rigid and slower search without the help of the thesaurus.
-                  Use this if you know what you are looking for.
+                  Use this if you have done this sort of thing before, as you
+                  will have to type your own query string
+                  <br />
+                  '&' = <i>and</i>
+                  <br />
+                  '|' = <i>or</i>
+                  <br />
+                  '!' = <i>negation</i>
+                </p>
+                <p>
+                  Ex: "search for verses that contain <i>David</i> and{" "}
+                  <i>Nathan</i> but not <i>King</i>":{" "}
+                  <em>david & nathan & !king</em>
                 </p>
               </div>
             </div>
-
           </div>
         </>
       ) : (
@@ -165,6 +172,7 @@ export const Base = () => {
                       setVersesSearched={setVersesSearched}
                       setIsUserSearching={setIsUserSearching}
                       setShowSearchingSpinner={setShowSearchingSpinner}
+                      searchType={searchType}
                     />
                   )}
               </div>

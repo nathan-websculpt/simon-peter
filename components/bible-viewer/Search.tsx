@@ -1,5 +1,6 @@
 // search bar, clear search button, and search button
 
+import { toast } from "@/lib/utils";
 import { handleRPC } from "@/utils/handleRPC";
 import {
   MagnifyingGlassCircleIcon,
@@ -13,6 +14,7 @@ interface SearchProps {
   setVersesSearched: Dispatch<any>; //todo: change 'any' and null-check below
   setIsUserSearching: Dispatch<boolean>;
   setShowSearchingSpinner: Dispatch<boolean>;
+  searchType: string;
 }
 
 export const Search = ({
@@ -21,20 +23,53 @@ export const Search = ({
   setVersesSearched,
   setIsUserSearching,
   setShowSearchingSpinner,
+  searchType,
 }: SearchProps) => {
   const handleSearch = async () => {
+    //determine the type of search
+    let functionName: string = "";
+    switch (searchType) {
+      case "simple": {
+        functionName = "search_simple";
+        break;
+      }
+      case "phrase": {
+        functionName = "search_phrase";
+        break;
+      }
+      default: {
+        functionName = "search_advanced";
+        break;
+      }
+    }
+
     setVersesSearched(null);
     setShowSearchingSpinner(true);
     setIsUserSearching(true); //this is correct in-that it is not a part of the IF statement
     //process string before searching
     let newSearchString = userSearchInput.replace(/  +/g, " ").trim(); //turn all spaces into one space
-    // newSearchString = newSearchString.replace(/ /g, "+"); //turn spaces into '+'
+    if (searchType === "advanced")
+      newSearchString = newSearchString.replace(/ /g, " & "); //turn spaces into ' & '
+
+    console.log("doing an ", searchType, " search for: ", newSearchString);
 
     const queryParams: object = {
       search_by: newSearchString,
     };
-    const data: any = await handleRPC("search_fts", queryParams);
-    if (data) setVersesSearched(data.verses);
+    const data: any = await handleRPC(functionName, queryParams);
+    if (data) {
+      setVersesSearched(data.verses);
+      if (data?.verses)
+        toast({
+          message: `${data.verses.length.toString()} Verses Returned...`,
+          success: true,
+        });
+      else
+        toast({
+          message: `0 Verses Returned...`,
+          success: true,
+        });
+    }
     setShowSearchingSpinner(false);
   };
   const clearSearch = async () => {

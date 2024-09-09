@@ -1,4 +1,5 @@
 import { Base } from "@/components/bible-viewer/Base";
+import { Toaster } from "@/components/ui/toaster";
 import dynamic from "next/dynamic";
 
 //This prevents 'window' from throwing error on a server build
@@ -23,6 +24,7 @@ export default async function Index() {
         <p></p>
       </footer> */}
       </div>
+      <Toaster />
     </>
   );
 }
