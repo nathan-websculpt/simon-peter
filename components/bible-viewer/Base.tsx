@@ -28,9 +28,23 @@ export const Base = () => {
 
   const [userSearchInput, setUserSearchInput] = useState("");
   const [versesSearched, setVersesSearched]: any = useState(null); //when user searches -- holds list of verses separate
-  const [isUserSearching, setIsUserSearching] = useState(false);
+  const [isUserSearching, setIsUserSearching] = useState(false); // actively searching
+  const [isInSearchMode, setIsInSearchMode] = useState(false); // a search type/mode has been selected
 
   const [showSearchingSpinner, setShowSearchingSpinner] = useState(false);
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchType, setSearchType] = useState("simple");
+
+  //useEffect for searchType
+
+  useEffect(() => {
+    console.log("searchType", searchType);
+    if (isMenuOpen) {
+      setIsMenuOpen(false);
+      setIsInSearchMode(true);
+    }
+  }, [searchType]);
 
   useEffect(() => {
     if (!isInitialized) {
@@ -63,90 +77,166 @@ export const Base = () => {
 
   return (
     <>
-      {!verses || verses.length === 0 ? (
-        <LoadingSpinner />
-      ) : (
+      <div className="flex flex-row justify-between w-full xl:w-4/5 mt-2 xl:mt-6">
+        <BaseButtons
+          isInViewChaptersMode={isInViewChaptersMode}
+          isInViewBooksMode={isInViewBooksMode}
+          setIsInViewBooksMode={setIsInViewBooksMode}
+          setIsInViewChaptersMode={setIsInViewChaptersMode}
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+          setIsUserSearching={setIsUserSearching}
+          setIsInSearchMode={setIsInSearchMode}
+          isInSearchMode={isInSearchMode}
+        />
+      </div>
+      {isMenuOpen ? (
         <>
-          <div className="flex flex-col">
-            <div className="flex flex-row justify-between">
-              {!isUserSearching && (
-                <BaseButtons
-                  isInViewChaptersMode={isInViewChaptersMode}
-                  isInViewBooksMode={isInViewBooksMode}
-                  setIsInViewBooksMode={setIsInViewBooksMode}
-                  setIsInViewChaptersMode={setIsInViewChaptersMode}
-                />
-              )}
-
-              {/* only show search bar if not viewing books/chapters */}
-              {!isInViewBooksMode && !isInViewChaptersMode && (
-                // the search bar
-                <Search
-                  userSearchInput={userSearchInput}
-                  setUserSearchInput={setUserSearchInput}
-                  setVersesSearched={setVersesSearched}
-                  setIsUserSearching={setIsUserSearching}
-                  setShowSearchingSpinner={setShowSearchingSpinner}
-                />
-              )}
+          <div className="w-screen h-screen flex flex-col prose">
+            <div
+              className="border-t border-b border-gray-300 cursor-pointer"
+              onClick={() => setSearchType("simple")}
+            >
+              <div className="pl-12 pr-6 py-12">
+                <h1>Simple Search</h1>
+                <p>
+                  A rigid and slower search without the help of the thesaurus.
+                  Use this if you know what you are looking for.
+                </p>
+              </div>
             </div>
 
-            {isUserSearching ? (
-              // user is searching
-              <VersesSearched
-                verses={versesSearched}
-                showSearchingSpinner={showSearchingSpinner}
-              />
-            ) : (
-              //user is not searching
-              <>
-                {isInViewBooksMode ? (
-                  <>
-                    {/* book-selections will show/hide chapters */}
-                    {isInViewChaptersMode ? (
-                      <ViewChapters
-                        setVerses={setVerses}
-                        setIsInViewChaptersMode={setIsInViewChaptersMode}
-                        setIsInViewBooksMode={setIsInViewBooksMode}
-                        setCurrentBookTitle={setCurrentBookTitle}
-                        setCurrentChapterTitle={setCurrentChapterTitle}
-                        setCurrentChapterId={setCurrentChapterId}
-                        chapters={chapters}
-                      />
-                    ) : (
-                      <ViewBooks books={books} setChapters={setChapters} />
-                    )}
-                  </>
-                ) : (
-                  //prev-next buttons, book-chapter details, and verses
-                  <div className="flex flex-col gap-1 mb-12 lg:px-12 xl:w-full mx-auto prose prose-xl">
-                    <PrevNextButtons
-                      currentChapterId={currentChapterId}
-                      setCurrentBookTitle={setCurrentBookTitle}
-                      setCurrentChapterTitle={setCurrentChapterTitle}
-                      setCurrentChapterId={setCurrentChapterId}
-                      setVerses={setVerses}
-                    />
+            
+            <div
+              className="border-t border-b border-gray-300 cursor-pointer"
+              onClick={() => setSearchType("phrase")}
+            >
+              <div className="pl-12 pr-6 py-12">
+              <h1>Phrase Search</h1>
+              <p>lorem</p>
+              </div>
+            </div>
 
-                    <BookDetails
-                      currentBookTitle={currentBookTitle}
-                      currentChapterTitle={currentChapterTitle}
-                    />
+            
+            <div
+              className="border-t border-b border-gray-300 cursor-pointer"
+              onClick={() => setSearchType("advanced")}
+            >
+              <div className="pl-12 pr-6 py-12">
+                <h1>Advanced Search</h1>
+                <p>
+                  A rigid and slower search without the help of the thesaurus.
+                  Use this if you know what you are looking for.
+                </p>
+              </div>
+            </div>
 
-                    <Verses verses={verses} />
+            
+            <div
+              className="border-t border-b border-gray-300 cursor-pointer"
+              onClick={() => setSearchType("custom")}
+            >
+              <div className="pl-12 pr-6 py-12">
+                <h1>Custom Search</h1>
+                <p>
+                  A rigid and slower search without the help of the thesaurus.
+                  Use this if you know what you are looking for.
+                </p>
+              </div>
+            </div>
 
-                    <PrevNextButtons
-                      currentChapterId={currentChapterId}
-                      setCurrentBookTitle={setCurrentBookTitle}
-                      setCurrentChapterTitle={setCurrentChapterTitle}
-                      setCurrentChapterId={setCurrentChapterId}
-                      setVerses={setVerses}
-                    />
-                  </div>
-                )}
-              </>
-            )}
           </div>
+        </>
+      ) : (
+        <>
+          {!verses || verses.length === 0 ? (
+            <LoadingSpinner />
+          ) : (
+            <>
+              <div className="flex flex-row justify-between">
+                {/* only show search bar if not viewing books/chapters */}
+                {!isInViewBooksMode &&
+                  !isInViewChaptersMode &&
+                  isInSearchMode && (
+                    // the search bar
+                    <Search
+                      userSearchInput={userSearchInput}
+                      setUserSearchInput={setUserSearchInput}
+                      setVersesSearched={setVersesSearched}
+                      setIsUserSearching={setIsUserSearching}
+                      setShowSearchingSpinner={setShowSearchingSpinner}
+                    />
+                  )}
+              </div>
+
+              {isUserSearching ? (
+                // user is searching
+                <VersesSearched
+                  verses={versesSearched}
+                  showSearchingSpinner={showSearchingSpinner}
+                />
+              ) : (
+                //user is not searching
+                <>
+                  {isInSearchMode ? (
+                    <>
+                      <h1>you are in {searchType} search mode</h1>
+                    </>
+                  ) : (
+                    <>
+                      {isInViewBooksMode ? (
+                        <>
+                          {/* book-selections will show/hide chapters */}
+                          {isInViewChaptersMode ? (
+                            <ViewChapters
+                              setVerses={setVerses}
+                              setIsInViewChaptersMode={setIsInViewChaptersMode}
+                              setIsInViewBooksMode={setIsInViewBooksMode}
+                              setCurrentBookTitle={setCurrentBookTitle}
+                              setCurrentChapterTitle={setCurrentChapterTitle}
+                              setCurrentChapterId={setCurrentChapterId}
+                              chapters={chapters}
+                            />
+                          ) : (
+                            <ViewBooks
+                              books={books}
+                              setChapters={setChapters}
+                            />
+                          )}
+                        </>
+                      ) : (
+                        //prev-next buttons, book-chapter details, and verses
+                        <div className="flex flex-col gap-1 mb-4 lg:px-12 xl:w-full mx-auto prose prose-xl">
+                          <PrevNextButtons
+                            currentChapterId={currentChapterId}
+                            setCurrentBookTitle={setCurrentBookTitle}
+                            setCurrentChapterTitle={setCurrentChapterTitle}
+                            setCurrentChapterId={setCurrentChapterId}
+                            setVerses={setVerses}
+                          />
+
+                          <BookDetails
+                            currentBookTitle={currentBookTitle}
+                            currentChapterTitle={currentChapterTitle}
+                          />
+
+                          <Verses verses={verses} />
+
+                          <PrevNextButtons
+                            currentChapterId={currentChapterId}
+                            setCurrentBookTitle={setCurrentBookTitle}
+                            setCurrentChapterTitle={setCurrentChapterTitle}
+                            setCurrentChapterId={setCurrentChapterId}
+                            setVerses={setVerses}
+                          />
+                        </div>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+            </>
+          )}
         </>
       )}
     </>
