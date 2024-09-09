@@ -1,3 +1,4 @@
+import { toast } from "@/lib/utils";
 import { createClient } from "./supabase/client";
 
 export async function handleRPC(
@@ -9,6 +10,10 @@ export async function handleRPC(
 
   if (error) {
     console.error("Error calling stored procedure:", error);
+    toast({
+      message: "Query failed: " + error.message,
+      success: false,
+    });
     return null;
   }
   console.log("data from", funtionToCall, " was:", data[0]);

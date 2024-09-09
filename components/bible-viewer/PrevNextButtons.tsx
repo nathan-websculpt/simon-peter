@@ -45,7 +45,7 @@ export const PrevNextButtons = ({
 
   return (
     <>
-      <div className="flex flex-row justify-around xl:justify-between w-screen xl:w-4/5 mx-auto mt-4 mb-8">
+      <div className="flex flex-row justify-around xl:justify-between w-screen md:w-11/12 xl:w-4/5 mx-auto mt-4 mb-8">
         <button className="btn btn-primary" onClick={handlePrevPageClick}>
           PREV
         </button>

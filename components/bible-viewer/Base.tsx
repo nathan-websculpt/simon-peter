@@ -70,7 +70,7 @@ export const Base = () => {
   return (
     <>
       <div
-        className={cn("flex flex-row w-full xl:w-4/5 mt-2 xl:mt-6", {
+        className={cn("flex flex-row w-full md:w-4/5 xl:w-3/5 mt-2 md:mt-6", {
           "justify-between": !(
             isInViewBooksMode ||
             isInViewChaptersMode ||
@@ -109,26 +109,26 @@ export const Base = () => {
             <LoadingSpinner />
           ) : (
             <>
-              <div className="flex flex-row justify-between">
-                {/* only show search bar if not viewing books/chapters */}
-                {!isInViewBooksMode &&
-                  !isInViewChaptersMode &&
-                  isInSearchMode && (
-                    // the search bar
-                    <Search
-                      userSearchInput={userSearchInput}
-                      setUserSearchInput={setUserSearchInput}
-                      setVersesSearched={setVersesSearched}
-                      setIsUserSearching={setIsUserSearching}
-                      setShowSearchingSpinner={setShowSearchingSpinner}
-                      searchType={searchType}
-                    />
-                  )}
-              </div>
+              {/* only show search bar if not viewing books/chapters */}
+              {!isInViewBooksMode &&
+                !isInViewChaptersMode &&
+                isInSearchMode && (
+                  // the search bar
+                  <Search
+                    userSearchInput={userSearchInput}
+                    setUserSearchInput={setUserSearchInput}
+                    setVersesSearched={setVersesSearched}
+                    setIsUserSearching={setIsUserSearching}
+                    setShowSearchingSpinner={setShowSearchingSpinner}
+                    searchType={searchType}
+                  />
+                )}
 
               {isInSearchMode || isUserSearching ? (
                 <>
-                  <h1 className="prose prose-lg">you are in {searchType} search mode</h1>
+                  <h1 className="prose prose-lg">
+                    you are in {searchType} search mode
+                  </h1>
                   {isUserSearching && (
                     <VersesSearched
                       verses={versesSearched}

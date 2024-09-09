@@ -26,6 +26,18 @@ export const Search = ({
   searchType,
 }: SearchProps) => {
   const handleSearch = async () => {
+    //validate input
+    if (
+      userSearchInput.trim() === "" ||
+      /[~`#$%\^*+=\-\[\]\\';/{}\\":<>\?]/g.test(userSearchInput.trim())
+    ) {
+      toast({
+        message: "Invalid Search Input",
+        success: false,
+      });
+      return;
+    }
+
     //determine the type of search
     let functionName: string = "";
     switch (searchType) {
@@ -46,6 +58,7 @@ export const Search = ({
     setVersesSearched(null);
     setShowSearchingSpinner(true);
     setIsUserSearching(true); //this is correct in-that it is not a part of the IF statement
+
     //process string before searching
     let newSearchString = userSearchInput.replace(/  +/g, " ").trim(); //turn all spaces into one space
     if (searchType === "advanced")
@@ -80,8 +93,8 @@ export const Search = ({
 
   return (
     <>
-      <div className="flex flex-row justify-center w-full gap-1 px-4 mx-auto mb-12 lg:w-11/12 xl:w-3/4 xl:px-0">
-        <div className="flex flex-row w-11/12 xl:w-3/4">
+      <div className="flex flex-row justify-center w-full gap-1 px-4 mx-auto mb-12 lg:w-11/12 xl:w-3/5 xl:px-0 mt-4 xl:mt-8">
+        <div className="flex flex-row w-11/12 xl:w-3/5">
           <input
             className="w-full h-12 pl-4 focus:outline-none bg-base-100"
             placeholder="Search by text"
