@@ -26,7 +26,7 @@ export const BaseMenu = ({
     setIsInSearchMode(true);
 
     //clear previously searched verses
-    setVersesSearched(null);
+    setVersesSearched([]);
     setIsUserSearching(false);
     setUserSearchInput("");
   };

@@ -36,7 +36,7 @@ export const Base = () => {
   const [showSearchingSpinner, setShowSearchingSpinner] = useState(false);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchType, setSearchType] = useState<string | null>(null);
+  const [searchType, setSearchType] = useState<string>("");
 
   useEffect(() => {
     if (!isInitialized) {
