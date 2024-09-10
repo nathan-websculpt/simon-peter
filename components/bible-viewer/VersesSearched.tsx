@@ -1,4 +1,4 @@
-import { Dispatch, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import { LoadingSpinner } from "../helpers/LoadingSpinner";
 import { Filter } from "./VersesSearched_Filter";
 import { NoResults } from "./VersesSearched_NoResults";
@@ -22,6 +22,10 @@ export const VersesSearched = ({
   versesSearchedCopy,
 }: VersesSearchedProps) => {
   const [isOnFilterPage, setIsOnFilterPage] = useState(false);
+
+  useEffect(() => {
+    console.log("Verses Searched component rendered", Date.now());
+  }, []);
 
   return (
     <>

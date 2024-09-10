@@ -15,6 +15,7 @@ import { BaseMenu } from "./BaseMenu";
 import { cn } from "@/lib/utils";
 
 export const Base = () => {
+  console.log("Base component rendered", Date.now());
   const [isInitialized, setIsInitialized] = useState(false);
   const [isInViewBooksMode, setIsInViewBooksMode] = useState(false);
   const [isInViewChaptersMode, setIsInViewChaptersMode] = useState(false);
@@ -41,6 +42,7 @@ export const Base = () => {
   const [searchType, setSearchType] = useState<string>("");
 
   useEffect(() => {
+    console.log("base component mounted", Date.now());
     if (!isInitialized) {
       setIsInitialized(true);
     }

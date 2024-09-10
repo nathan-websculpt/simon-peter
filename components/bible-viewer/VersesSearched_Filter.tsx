@@ -33,6 +33,10 @@ export const Filter = ({
   const [allBooksSelected, setAllBooksSelected] = useState(true); //this is select/de-select all books (on filter page)
 
   useEffect(() => {
+    console.log("Filter component rendered", Date.now())
+  }, []);
+
+  useEffect(() => {
     console.log("userSearchInputProcessed: ", userSearchInputProcessed);
     console.log("processing books-filter list...");
     setHasUserFilteredThisSearchYet(false); //this will keep us from needing to use two copies of verses UNTIL the user filters
@@ -45,20 +49,17 @@ export const Filter = ({
 
   useEffect(() => {
     if (!isOnFilterPage && hasUserFilteredThisSearchYet) {
+      console.log("debug z:");
       handleBookFilter();
     }
   }, [isOnFilterPage]);
-
-  useEffect(() => {
-    if (bookList && bookList.length > 0) console.log("bookList: ", bookList);
-  }, [bookList]);
 
   useEffect(() => {
     if (resettingFilteredBookList) {
       setResettingFilteredBookList(false);
       return;
     }
-
+    console.log("debug f");
     if (
       filteredBookList &&
       bookList &&
@@ -73,6 +74,7 @@ export const Filter = ({
         success: false,
       });
       setResettingFilteredBookList(true);
+      console.log("debug g");
       setFilteredBookList(filteredBookListCopy); //reset to the previous state
 
       //reset the checkbox that got us here
@@ -87,6 +89,7 @@ export const Filter = ({
 
     if (!hasUserFilteredThisSearchYet) setHasUserFilteredThisSearchYet(true);
 
+    console.log("debug L:");
     setFilteredBookListCopy(filteredBookList);
 
     if (filteredBookList && filteredBookList.length > 0)
@@ -94,6 +97,7 @@ export const Filter = ({
   }, [filteredBookList]);
 
   const processBooks = async () => {
+    console.log("debug x:");
     const uniqueBookTitles: any = Array.from(
       new Set(verses.map((verse: any) => verse.book_title))
     ).sort(
@@ -110,6 +114,7 @@ export const Filter = ({
   const handleBookFilter = async () => {
     console.log("filtering verses...");
 
+    console.log("debug y:");
     setVerses(
       versesSearchedCopy.filter(
         (verse) => !filteredBookList.includes(verse.book_title)
@@ -120,8 +125,10 @@ export const Filter = ({
   // select/de-select all books on filter page
   const handleSelectAll = (e: any) => {
     if (e.target.checked) {
+      console.log("debug h:");
       setFilteredBookList([]);
     } else {
+      console.log("debug i:");
       setFilteredBookList(bookList.slice(1));
     }
 
@@ -167,8 +174,10 @@ export const Filter = ({
                   checked={!filteredBookList.includes(book)}
                   onChange={(e) => {
                     if (!e.target.checked) {
+                      console.log("debug j:");
                       setFilteredBookList((prev) => [...prev, book]);
                     } else {
+                      console.log("debug k:");
                       setFilteredBookList((prev) =>
                         prev.filter((item) => item !== book)
                       );

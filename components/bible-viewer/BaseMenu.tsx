@@ -29,6 +29,7 @@ export const BaseMenu = ({
     setIsInSearchMode(true);
 
     //clear previously searched verses
+    console.log("debug b:");
     setVersesSearched([]);
     setVersesSearchedCopy([]);
     setIsUserSearching(false);

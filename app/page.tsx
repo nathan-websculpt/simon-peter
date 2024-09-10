@@ -8,6 +8,7 @@ const DynamicScrollTo = dynamic(() => import("@/components/helpers/ScrollTo"), {
 });
 
 export default async function Index() {
+  console.log("Index rendered", Date.now());
   return (
     <>
       <DynamicScrollTo />

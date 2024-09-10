@@ -4,7 +4,7 @@ import {
   MagnifyingGlassCircleIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
-import { Dispatch } from "react";
+import { Dispatch, useEffect } from "react";
 
 // search bar, clear search button, and search button
 
@@ -29,7 +29,11 @@ export const Search = ({
   searchType,
   setUserSearchInputProcessed,
 }: SearchProps) => {
+useEffect(() => {
+  console.log("search rendered");
+},[]);
   const handleSearch = async () => {
+    console.log("debug e:");
     //validate input
     if (
       userSearchInput.trim() === "" ||
@@ -59,17 +63,15 @@ export const Search = ({
       }
     }
 
-    setVersesSearched(null);
-    setVersesSearchedCopy(null);
     setShowSearchingSpinner(true);
-    setIsUserSearching(true); //this is correct in-that it is not a part of the IF statement
+    setIsUserSearching(true);
 
     //process string before searching
     let newSearchString = userSearchInput.replace(/  +/g, " ").trim(); //turn all spaces into one space
     if (searchType === "advanced")
       newSearchString = newSearchString.replace(/ /g, " & "); //turn spaces into ' & '
 
-    console.log("doing a ", searchType, " search for: ", newSearchString);
+    console.log("doing a", searchType, "search for:", newSearchString);
 
     const queryParams: object = {
       search_by: newSearchString,
@@ -78,6 +80,7 @@ export const Search = ({
 
     if (data) {
       if (data?.verses) {
+        console.log("debug d:");
         setVersesSearched(data.verses);
         setVersesSearchedCopy(data.verses); //todo: this isn't technically necessary until the user filters
         setUserSearchInputProcessed(newSearchString); //the change of this gens new filter-book list
@@ -85,16 +88,30 @@ export const Search = ({
           message: `${data.verses.length.toString()} Verses Returned...`,
           success: true,
         });
-      } else
+      } else {
+        console.log("debug w:");
+        setVersesSearched(null);
+        setVersesSearchedCopy(null);
         toast({
           message: `0 Verses Returned...`,
           success: true,
         });
+      }
+    } else {
+      console.log("debug c:");
+      setVersesSearched(null);
+      setVersesSearchedCopy(null);
+      toast({
+        message: `0 Verses Returned...`,
+        success: true,
+      });
     }
     setShowSearchingSpinner(false);
   };
   const clearSearch = async () => {
+    console.log("debug a:");
     setVersesSearched(null);
+    setVersesSearchedCopy(null);
     setIsUserSearching(false);
     setUserSearchInput("");
   };
