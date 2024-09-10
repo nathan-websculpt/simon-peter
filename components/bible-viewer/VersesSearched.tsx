@@ -12,7 +12,6 @@ interface VersesSearchedProps {
   setVersesSearched: Dispatch<[]>;
   userSearchInputProcessed: string;
   versesSearchedCopy: [];
-  setVersesSearchedCopy: Dispatch<[]>;
 }
 
 export const VersesSearched = ({
@@ -21,9 +20,8 @@ export const VersesSearched = ({
   setVersesSearched,
   userSearchInputProcessed,
   versesSearchedCopy,
-  setVersesSearchedCopy,
 }: VersesSearchedProps) => {
-  const [isFiltering, setIsFiltering] = useState(false);
+  const [isOnFilterPage, setIsOnFilterPage] = useState(false);
 
   return (
     <>
@@ -42,18 +40,17 @@ export const VersesSearched = ({
       {verses && verses.length > 0 && (
         <Filter
           verses={verses}
-          setIsFiltering={setIsFiltering}
-          isFiltering={isFiltering}
+          setIsOnFilterPage={setIsOnFilterPage}
+          isOnFilterPage={isOnFilterPage}
           setVerses={setVersesSearched}
           userSearchInputProcessed={userSearchInputProcessed}
-          setVersesSearchedCopy={setVersesSearchedCopy}
           versesSearchedCopy={versesSearchedCopy}
         />
       )}
 
       {/* IF NOT Filtering: display verses (search results) */}
       {/* IF Filtering: ^^^ Above filter will display books to select and de-select */}
-      {!isFiltering && (
+      {!isOnFilterPage && (
         <div className="grid grid-cols-1 gap-2 lg:gap-4 xl:gap-8 lg:grid-cols-2 xl:grid-cols-4 mb-12 w-screen px-2 lg:px-8 xl:px-12">
           {verses?.map((verse: any) => (
             <div

@@ -16,7 +16,7 @@ interface SearchProps {
   setIsUserSearching: Dispatch<boolean>;
   setShowSearchingSpinner: Dispatch<boolean>;
   searchType: string;
-  setUserSearchInputProcessed: Dispatch<boolean>;
+  setUserSearchInputProcessed: Dispatch<string>;
 }
 
 export const Search = ({

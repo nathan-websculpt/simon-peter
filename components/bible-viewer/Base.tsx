@@ -140,7 +140,6 @@ export const Base = () => {
                       showSearchingSpinner={showSearchingSpinner}
                       setVersesSearched={setVersesSearched}
                       versesSearchedCopy={versesSearchedCopy}
-                      setVersesSearchedCopy={setVersesSearchedCopy}
                       userSearchInputProcessed={userSearchInputProcessed}
                     />
                   )}
