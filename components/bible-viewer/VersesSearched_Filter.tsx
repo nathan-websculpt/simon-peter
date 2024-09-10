@@ -30,6 +30,8 @@ export const Filter = ({
   const [hasUserFilteredThisSearchYet, setHasUserFilteredThisSearchYet] =
     useState(false);
 
+  const [allBooksSelected, setAllBooksSelected] = useState(true); //this is select/de-select all books (on filter page)
+
   useEffect(() => {
     console.log("userSearchInputProcessed: ", userSearchInputProcessed);
     console.log("processing books-filter list...");
@@ -115,6 +117,17 @@ export const Filter = ({
     );
   };
 
+  // select/de-select all books on filter page
+  const handleSelectAll = (e: any) => {
+    if (e.target.checked) {
+      setFilteredBookList([]);
+    } else {
+      setFilteredBookList(bookList.slice(1));
+    }
+
+    setAllBooksSelected(e.target.checked);
+  };
+
   return (
     <>
       {bookList.length > 1 && (
@@ -129,29 +142,46 @@ export const Filter = ({
       )}
 
       {isOnFilterPage && (
-        <div className="grid grid-cols-2 gap-6 my-6">
-          {bookList.map((book) => (
-            <div key={book} className="flex items-center">
-              <input
-                type="checkbox"
-                id={book}
-                className="mr-2"
-                value={book}
-                defaultChecked={!filteredBookList.includes(book)}
-                onChange={(e) => {
-                  if (!e.target.checked) {
-                    setFilteredBookList((prev) => [...prev, book]);
-                  } else {
-                    setFilteredBookList((prev) =>
-                      prev.filter((item) => item !== book)
-                    );
-                  }
-                }}
-              />
-              <label htmlFor={book}>{book}</label>
-            </div>
-          ))}
-        </div>
+        <>
+          <div className="flex w-full lg:w-3/5 xl:w-2/5 justify-end mt-4 xl:mt-12 mr-6">
+            <input
+              id="selectAllFilters"
+              type="checkbox"
+              className="mr-2 cursor-pointer"
+              onChange={(e) => handleSelectAll(e)}
+              checked={allBooksSelected}
+            />
+            <label className="cursor-pointer" htmlFor="selectAllFilters">
+              {allBooksSelected ? "De-Select All" : "Select All"}
+            </label>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6 xl:gap-8 my-6">
+            {bookList.map((book) => (
+              <div key={book} className="flex items-center">
+                <input
+                  type="checkbox"
+                  id={book}
+                  className="mr-2 cursor-pointer"
+                  value={book}
+                  checked={!filteredBookList.includes(book)}
+                  onChange={(e) => {
+                    if (!e.target.checked) {
+                      setFilteredBookList((prev) => [...prev, book]);
+                    } else {
+                      setFilteredBookList((prev) =>
+                        prev.filter((item) => item !== book)
+                      );
+                    }
+                  }}
+                />
+                <label className="cursor-pointer" htmlFor={book}>
+                  {book}
+                </label>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </>
   );
