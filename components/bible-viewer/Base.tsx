@@ -31,6 +31,7 @@ export const Base = () => {
   const [isInSearchMode, setIsInSearchMode] = useState(false); // a search type/mode has been selected
   const [isUserSearching, setIsUserSearching] = useState(false); // actively searching
   const [userSearchInput, setUserSearchInput] = useState("");
+  const [userSearchInputProcessed, setUserSearchInputProcessed] = useState("");
   const [versesSearched, setVersesSearched]: any = useState(null); //when user searches -- holds list of verses separate
 
   const [showSearchingSpinner, setShowSearchingSpinner] = useState(false);
@@ -121,6 +122,7 @@ export const Base = () => {
                     setIsUserSearching={setIsUserSearching}
                     setShowSearchingSpinner={setShowSearchingSpinner}
                     searchType={searchType}
+                    setUserSearchInputProcessed={setUserSearchInputProcessed}
                   />
                 )}
 
@@ -134,6 +136,7 @@ export const Base = () => {
                       verses={versesSearched}
                       showSearchingSpinner={showSearchingSpinner}
                       setVersesSearched={setVersesSearched}
+                      userSearchInputProcessed={userSearchInputProcessed}
                     />
                   )}
                 </>

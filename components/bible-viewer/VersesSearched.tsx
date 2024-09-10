@@ -10,12 +10,14 @@ interface VersesSearchedProps {
   verses: [];
   showSearchingSpinner: boolean;
   setVersesSearched: Dispatch<[]>;
+  userSearchInputProcessed: string;
 }
 
 export const VersesSearched = ({
   verses,
   showSearchingSpinner,
   setVersesSearched,
+  userSearchInputProcessed,
 }: VersesSearchedProps) => {
   const [isFiltering, setIsFiltering] = useState(false);
 
@@ -39,6 +41,7 @@ export const VersesSearched = ({
           setIsFiltering={setIsFiltering}
           isFiltering={isFiltering}
           setVerses={setVersesSearched}
+          userSearchInputProcessed={userSearchInputProcessed}
         />
       )}
 

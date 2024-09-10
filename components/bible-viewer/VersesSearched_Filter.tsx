@@ -8,6 +8,7 @@ interface FilterProps {
   isFiltering: boolean;
   setIsFiltering: Dispatch<boolean>;
   setVerses: Dispatch<[]>;
+  userSearchInputProcessed: string;
 }
 
 export const Filter = ({
@@ -15,16 +16,23 @@ export const Filter = ({
   isFiltering,
   setIsFiltering,
   setVerses,
+  userSearchInputProcessed,
 }: FilterProps) => {
   const [bookList, setBookList] = useState([]);
   const [filteredBookList, setFilteredBookList] = useState([]);
+
+  useEffect(() => {
+    console.log("userSearchInputProcessed: ", userSearchInputProcessed);
+    console.log("processing books-filter list...");
+    processBooks();
+  }, [userSearchInputProcessed]);
 
   useEffect(() => {
     console.log("verses changing to: ", verses);
   }, [verses]);
 
   useEffect(() => {
-    if (isFiltering) processBooks();
+    // if (isFiltering) processBooks();
     if (!isFiltering && filteredBookList && filteredBookList.length > 0) {
       handleBookFilter();
     }
@@ -54,7 +62,7 @@ export const Filter = ({
   // This function filters the `verses` array
   // to only include verses whose book title is NOT in the `filteredBookList` array.
   const handleBookFilter = async () => {
-    console.log("handleBookFilter...");
+    console.log("filtering verses...");
     setVerses(
       verses.filter((verse) => !filteredBookList.includes(verse.book_title))
     );
@@ -78,7 +86,7 @@ export const Filter = ({
                 id={book}
                 className="mr-2"
                 value={book}
-                defaultChecked={true}
+                defaultChecked={!filteredBookList.includes(book)}
                 onChange={(e) => {
                   if (!e.target.checked) {
                     setFilteredBookList((prev) => [...prev, book]);

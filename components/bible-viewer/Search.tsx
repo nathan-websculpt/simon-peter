@@ -15,6 +15,7 @@ interface SearchProps {
   setIsUserSearching: Dispatch<boolean>;
   setShowSearchingSpinner: Dispatch<boolean>;
   searchType: string;
+  setUserSearchInputProcessed: Dispatch<boolean>;
 }
 
 export const Search = ({
@@ -24,6 +25,7 @@ export const Search = ({
   setIsUserSearching,
   setShowSearchingSpinner,
   searchType,
+  setUserSearchInputProcessed
 }: SearchProps) => {
   const handleSearch = async () => {
     //validate input
@@ -73,11 +75,13 @@ export const Search = ({
 
     if (data) {
       setVersesSearched(data.verses);
-      if (data?.verses)
+      if (data?.verses) {
+        setUserSearchInputProcessed(newSearchString); //the change of this gens new filter-book list
         toast({
           message: `${data.verses.length.toString()} Verses Returned...`,
           success: true,
         });
+      }
       else
         toast({
           message: `0 Verses Returned...`,
