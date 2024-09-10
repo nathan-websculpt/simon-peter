@@ -25,9 +25,12 @@ export const Filter = ({
   const [bookList, setBookList] = useState([]);
   const [filteredBookList, setFilteredBookList] = useState([]);
 
+  const [hasUserFilteredThisSearchYet, setHasUserFilteredThisSearchYet] = useState(false);
+
   useEffect(() => {
     console.log("userSearchInputProcessed: ", userSearchInputProcessed);
     console.log("processing books-filter list...");
+    setHasUserFilteredThisSearchYet(false); //this will keep us from needing to use two copies of verses UNTIL the user filters
     processBooks();
   }, [userSearchInputProcessed]);
 
@@ -36,10 +39,7 @@ export const Filter = ({
   }, [verses]);
 
   useEffect(() => {
-    // if (!isFiltering && filteredBookList && filteredBookList.length > 0) {
-    // ^^^ won't work if trying to turn off last item in filter
-    // so really need to know if a filter was initially applied
-    if (!isFiltering) {
+    if (!isFiltering && hasUserFilteredThisSearchYet) {
       handleBookFilter();
     }
   }, [isFiltering]);
@@ -49,6 +49,8 @@ export const Filter = ({
   }, [bookList]);
 
   useEffect(() => {
+    if(!hasUserFilteredThisSearchYet) setHasUserFilteredThisSearchYet(true);
+
     if (filteredBookList && filteredBookList.length > 0)
       console.log("filteredBookList: ", filteredBookList);
   }, [filteredBookList]);
