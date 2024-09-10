@@ -133,6 +133,7 @@ export const Base = () => {
                     <VersesSearched
                       verses={versesSearched}
                       showSearchingSpinner={showSearchingSpinner}
+                      setVersesSearched={setVersesSearched}
                     />
                   )}
                 </>
