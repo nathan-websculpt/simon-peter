@@ -1,5 +1,3 @@
-// search bar, clear search button, and search button
-
 import { toast } from "@/lib/utils";
 import { handleRPC } from "@/utils/handleRPC";
 import {
@@ -8,10 +6,12 @@ import {
 } from "@heroicons/react/24/outline";
 import { Dispatch } from "react";
 
+// search bar, clear search button, and search button
+
 interface SearchProps {
   userSearchInput: string;
   setUserSearchInput: Dispatch<string>;
-  setVersesSearched: Dispatch<any>; //todo: change 'any' and null-check below
+  setVersesSearched: Dispatch<any>; //todo: change 'any' and do a null-check below
   setIsUserSearching: Dispatch<boolean>;
   setShowSearchingSpinner: Dispatch<boolean>;
   searchType: string;
@@ -50,7 +50,7 @@ export const Search = ({
         break;
       }
       default: {
-        functionName = "search_advanced";
+        functionName = "search_advanced"; //The only difference between advanced and custom searches is whether or not the string gets edited before the query
         break;
       }
     }
@@ -70,6 +70,7 @@ export const Search = ({
       search_by: newSearchString,
     };
     const data: any = await handleRPC(functionName, queryParams);
+
     if (data) {
       setVersesSearched(data.verses);
       if (data?.verses)
@@ -93,7 +94,7 @@ export const Search = ({
 
   return (
     <>
-      <div className="flex flex-row justify-center w-full gap-1 px-4 mx-auto mb-12 lg:w-11/12 xl:w-3/5 xl:px-0 mt-4 xl:mt-8">
+      <div className="flex flex-row justify-center w-full gap-1 px-4 mx-auto mb-4 lg:w-11/12 xl:w-3/5 xl:px-0 mt-4 xl:mt-8">
         <div className="flex flex-row w-11/12 xl:w-3/5">
           <input
             className="w-full h-12 pl-4 focus:outline-none bg-base-100"

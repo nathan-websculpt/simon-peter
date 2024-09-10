@@ -28,10 +28,10 @@ export const Base = () => {
   const [currentChapterTitle, setCurrentChapterTitle] = useState("");
   const [currentChapterId, setCurrentChapterId] = useState(1);
 
+  const [isInSearchMode, setIsInSearchMode] = useState(false); // a search type/mode has been selected
+  const [isUserSearching, setIsUserSearching] = useState(false); // actively searching
   const [userSearchInput, setUserSearchInput] = useState("");
   const [versesSearched, setVersesSearched]: any = useState(null); //when user searches -- holds list of verses separate
-  const [isUserSearching, setIsUserSearching] = useState(false); // actively searching
-  const [isInSearchMode, setIsInSearchMode] = useState(false); // a search type/mode has been selected
 
   const [showSearchingSpinner, setShowSearchingSpinner] = useState(false);
 
@@ -109,7 +109,7 @@ export const Base = () => {
             <LoadingSpinner />
           ) : (
             <>
-              {/* only show search bar if not viewing books/chapters */}
+              {/* only show search bar if not viewing books/chapters && in search mode */}
               {!isInViewBooksMode &&
                 !isInViewChaptersMode &&
                 isInSearchMode && (

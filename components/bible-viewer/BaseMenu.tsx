@@ -1,7 +1,8 @@
-//top of Verses, displays book title and chapter number
-
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 import { Dispatch } from "react";
+
+// menu takes over screen
+// currently allows user to toggle between search modes
 
 interface BaseMenuProps {
   setSearchType: Dispatch<string>;
@@ -30,6 +31,7 @@ export const BaseMenu = ({
     setIsUserSearching(false);
     setUserSearchInput("");
   };
+
   return (
     <>
       <div className="w-screen flex flex-col prose">
