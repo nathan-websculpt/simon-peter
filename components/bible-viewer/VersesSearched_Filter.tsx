@@ -9,6 +9,8 @@ interface FilterProps {
   setIsFiltering: Dispatch<boolean>;
   setVerses: Dispatch<[]>;
   userSearchInputProcessed: string;
+  versesSearchedCopy: [];
+  setVersesSearchedCopy: Dispatch<[]>;
 }
 
 export const Filter = ({
@@ -17,6 +19,8 @@ export const Filter = ({
   setIsFiltering,
   setVerses,
   userSearchInputProcessed,
+  versesSearchedCopy,
+  setVersesSearchedCopy,
 }: FilterProps) => {
   const [bookList, setBookList] = useState([]);
   const [filteredBookList, setFilteredBookList] = useState([]);
@@ -32,8 +36,10 @@ export const Filter = ({
   }, [verses]);
 
   useEffect(() => {
-    // if (isFiltering) processBooks();
-    if (!isFiltering && filteredBookList && filteredBookList.length > 0) {
+    // if (!isFiltering && filteredBookList && filteredBookList.length > 0) {
+    // ^^^ won't work if trying to turn off last item in filter
+    // so really need to know if a filter was initially applied
+    if (!isFiltering) {
       handleBookFilter();
     }
   }, [isFiltering]);
@@ -64,7 +70,9 @@ export const Filter = ({
   const handleBookFilter = async () => {
     console.log("filtering verses...");
     setVerses(
-      verses.filter((verse) => !filteredBookList.includes(verse.book_title))
+      versesSearchedCopy.filter(
+        (verse) => !filteredBookList.includes(verse.book_title)
+      )
     );
   };
 

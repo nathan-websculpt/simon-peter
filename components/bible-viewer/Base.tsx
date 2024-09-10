@@ -31,8 +31,9 @@ export const Base = () => {
   const [isInSearchMode, setIsInSearchMode] = useState(false); // a search type/mode has been selected
   const [isUserSearching, setIsUserSearching] = useState(false); // actively searching
   const [userSearchInput, setUserSearchInput] = useState("");
-  const [userSearchInputProcessed, setUserSearchInputProcessed] = useState("");
-  const [versesSearched, setVersesSearched]: any = useState(null); //when user searches -- holds list of verses separate
+  const [userSearchInputProcessed, setUserSearchInputProcessed] = useState(""); //after it is cleaned/processed; change of this gens books-filter
+  const [versesSearched, setVersesSearched]: any = useState(null); //when user searches -- holds list of verses separated
+  const [versesSearchedCopy, setVersesSearchedCopy]: any = useState(null); //use to filter the nth time, so all verses can be included in the filer
 
   const [showSearchingSpinner, setShowSearchingSpinner] = useState(false);
 
@@ -100,6 +101,7 @@ export const Base = () => {
             setSearchType={setSearchType}
             setIsInSearchMode={setIsInSearchMode}
             setVersesSearched={setVersesSearched}
+            setVersesSearchedCopy={setVersesSearchedCopy}
             setIsUserSearching={setIsUserSearching}
             setUserSearchInput={setUserSearchInput}
           />
@@ -119,6 +121,7 @@ export const Base = () => {
                     userSearchInput={userSearchInput}
                     setUserSearchInput={setUserSearchInput}
                     setVersesSearched={setVersesSearched}
+                    setVersesSearchedCopy={setVersesSearchedCopy}
                     setIsUserSearching={setIsUserSearching}
                     setShowSearchingSpinner={setShowSearchingSpinner}
                     searchType={searchType}
@@ -136,6 +139,8 @@ export const Base = () => {
                       verses={versesSearched}
                       showSearchingSpinner={showSearchingSpinner}
                       setVersesSearched={setVersesSearched}
+                      versesSearchedCopy={versesSearchedCopy}
+                      setVersesSearchedCopy={setVersesSearchedCopy}
                       userSearchInputProcessed={userSearchInputProcessed}
                     />
                   )}

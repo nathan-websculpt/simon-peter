@@ -11,6 +11,8 @@ interface VersesSearchedProps {
   showSearchingSpinner: boolean;
   setVersesSearched: Dispatch<[]>;
   userSearchInputProcessed: string;
+  versesSearchedCopy: [];
+  setVersesSearchedCopy: Dispatch<[]>;
 }
 
 export const VersesSearched = ({
@@ -18,6 +20,8 @@ export const VersesSearched = ({
   showSearchingSpinner,
   setVersesSearched,
   userSearchInputProcessed,
+  versesSearchedCopy,
+  setVersesSearchedCopy,
 }: VersesSearchedProps) => {
   const [isFiltering, setIsFiltering] = useState(false);
 
@@ -42,6 +46,8 @@ export const VersesSearched = ({
           isFiltering={isFiltering}
           setVerses={setVersesSearched}
           userSearchInputProcessed={userSearchInputProcessed}
+          setVersesSearchedCopy={setVersesSearchedCopy}
+          versesSearchedCopy={versesSearchedCopy}
         />
       )}
 

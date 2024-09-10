@@ -12,6 +12,7 @@ interface SearchProps {
   userSearchInput: string;
   setUserSearchInput: Dispatch<string>;
   setVersesSearched: Dispatch<any>; //todo: change 'any' and do a null-check below
+  setVersesSearchedCopy: Dispatch<any>;
   setIsUserSearching: Dispatch<boolean>;
   setShowSearchingSpinner: Dispatch<boolean>;
   searchType: string;
@@ -22,10 +23,11 @@ export const Search = ({
   userSearchInput,
   setUserSearchInput,
   setVersesSearched,
+  setVersesSearchedCopy,
   setIsUserSearching,
   setShowSearchingSpinner,
   searchType,
-  setUserSearchInputProcessed
+  setUserSearchInputProcessed,
 }: SearchProps) => {
   const handleSearch = async () => {
     //validate input
@@ -58,6 +60,7 @@ export const Search = ({
     }
 
     setVersesSearched(null);
+    setVersesSearchedCopy(null);
     setShowSearchingSpinner(true);
     setIsUserSearching(true); //this is correct in-that it is not a part of the IF statement
 
@@ -74,15 +77,15 @@ export const Search = ({
     const data: any = await handleRPC(functionName, queryParams);
 
     if (data) {
-      setVersesSearched(data.verses);
       if (data?.verses) {
+        setVersesSearched(data.verses);
+        setVersesSearchedCopy(data.verses); //todo: this isn't technically necessary until the user filters
         setUserSearchInputProcessed(newSearchString); //the change of this gens new filter-book list
         toast({
           message: `${data.verses.length.toString()} Verses Returned...`,
           success: true,
         });
-      }
-      else
+      } else
         toast({
           message: `0 Verses Returned...`,
           success: true,
