@@ -44,6 +44,9 @@ export const Base = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchType, setSearchType] = useState<string>("");
 
+  const [filteredBookList, setFilteredBookList] = useState([]);
+  const [allBooksSelected, setAllBooksSelected] = useState(true); //this is select/de-select all books (on filter page)
+
   const [searchPageSize, setSearchPageSize] = useState(100);
   const [searchPageNum, setSearchPageNum] = useState(1);
 
@@ -137,6 +140,10 @@ export const Base = () => {
                     setUserSearchInputProcessed={setUserSearchInputProcessed}
                     pageNum={searchPageNum}
                     pageSize={searchPageSize}
+                    filteredBookList={filteredBookList}
+                    setFilteredBookList={setFilteredBookList}
+                    allBooksSelected={allBooksSelected}
+                    setAllBooksSelected={setAllBooksSelected}
                   />
                 )}
 
@@ -157,6 +164,10 @@ export const Base = () => {
                       pageNum={searchPageNum}
                       pageSize={searchPageSize}
                       setPageNum={setSearchPageNum}
+                      filteredBookList={filteredBookList}
+                      setFilteredBookList={setFilteredBookList}
+                      allBooksSelected={allBooksSelected}
+                      setAllBooksSelected={setAllBooksSelected}
                     />
                   )}
                 </>

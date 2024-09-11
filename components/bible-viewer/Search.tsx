@@ -20,6 +20,10 @@ interface SearchProps {
   setUserSearchInputProcessed: Dispatch<string>;
   pageNum: number;
   pageSize: number;
+  filteredBookList: [];
+  setFilteredBookList: Dispatch<[]>;
+  allBooksSelected: boolean;
+  setAllBooksSelected: Dispatch<boolean>;
 }
 
 export const Search = ({
@@ -34,12 +38,12 @@ export const Search = ({
   setUserSearchInputProcessed,
   pageNum,
   pageSize,
+  filteredBookList,
+  setFilteredBookList,
+  allBooksSelected,
+  setAllBooksSelected,
 }: SearchProps) => {
-  useEffect(() => {
-    console.log("search rendered");
-  }, []);
   const handleSearch = async () => {
-    console.log("debug e:");
     //validate input
     if (
       userSearchInput.trim() === "" ||
@@ -51,6 +55,12 @@ export const Search = ({
       });
       return;
     }
+
+    if (!allBooksSelected) setAllBooksSelected(true);
+
+    setFilteredBookList([]);
+    setShowSearchingSpinner(true);
+    setIsUserSearching(true);
 
     //determine the type of search
     let functionName: string = "";
@@ -68,9 +78,6 @@ export const Search = ({
         break;
       }
     }
-
-    setShowSearchingSpinner(true);
-    setIsUserSearching(true);
 
     //process string before searching
     let newSearchString = userSearchInput.replace(/  +/g, " ").trim(); //turn all spaces into one space
@@ -95,7 +102,6 @@ export const Search = ({
           success: true,
         });
       } else {
-        console.log("debug w:");
         setVersesSearched(null);
         setVersesSearchedCopy(null);
         setVersesSearchedFiltered(null);
@@ -105,7 +111,6 @@ export const Search = ({
         });
       }
     } else {
-      console.log("debug c:");
       setVersesSearched(null);
       setVersesSearchedCopy(null);
       setVersesSearchedFiltered(null);
@@ -117,7 +122,6 @@ export const Search = ({
     setShowSearchingSpinner(false);
   };
   const clearSearch = async () => {
-    console.log("debug a:");
     setVersesSearched(null);
     setVersesSearchedCopy(null);
     setVersesSearchedFiltered(null);

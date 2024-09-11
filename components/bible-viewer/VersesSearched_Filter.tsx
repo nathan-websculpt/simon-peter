@@ -15,6 +15,10 @@ interface FilterProps {
   pageNum: number;
   setPageNum: Dispatch<number>;
   pageSize: number;
+  filteredBookList: [];
+  setFilteredBookList: Dispatch<[]>;
+  allBooksSelected: boolean;
+  setAllBooksSelected: Dispatch<boolean>;
 }
 
 export const Filter = ({
@@ -28,17 +32,18 @@ export const Filter = ({
   pageNum,
   setPageNum,
   pageSize,
+  filteredBookList,
+  setFilteredBookList,
+  allBooksSelected,
+  setAllBooksSelected,
 }: FilterProps) => {
   const [bookList, setBookList] = useState([]);
-  const [filteredBookList, setFilteredBookList] = useState([]);
   const [filteredBookListCopy, setFilteredBookListCopy] = useState([]); //if the user filters out the last book, filteredBookList will be rest to filteredBookListCopy
   const [resettingFilteredBookList, setResettingFilteredBookList] =
     useState(false);
 
   const [hasUserFilteredThisSearchYet, setHasUserFilteredThisSearchYet] =
     useState(false);
-
-  const [allBooksSelected, setAllBooksSelected] = useState(true); //this is select/de-select all books (on filter page)
 
   useEffect(() => {
     console.log("Filter component rendered", Date.now());
@@ -129,20 +134,16 @@ export const Filter = ({
     setVersesSearchedFiltered(_filtered);
 
     if (pageNum > 1) setPageNum(1); //will setVerses()
-    else //pageNum is 1
-      setVerses(
-        _filtered.slice(0, pageSize)
-      );
+    //pageNum is 1
+    else setVerses(_filtered.slice(0, pageSize));
     //^^^ if on page 1, then we'll get the subset of verses for the current page; else, pageNum change will take care of that
   };
 
   // select/de-select all books on filter page
   const handleSelectAll = (e: any) => {
     if (e.target.checked) {
-      console.log("debug h:");
       setFilteredBookList([]);
     } else {
-      console.log("debug i:");
       setFilteredBookList(bookList.slice(1));
     }
 
@@ -188,10 +189,8 @@ export const Filter = ({
                   checked={!filteredBookList.includes(book)}
                   onChange={(e) => {
                     if (!e.target.checked) {
-                      console.log("debug j:");
                       setFilteredBookList((prev) => [...prev, book]);
                     } else {
-                      console.log("debug k:");
                       setFilteredBookList((prev) =>
                         prev.filter((item) => item !== book)
                       );

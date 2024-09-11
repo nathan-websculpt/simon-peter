@@ -18,6 +18,10 @@ interface VersesSearchedProps {
   setPageNum: Dispatch<number>;
   pageNum: number;
   pageSize: number;
+  filteredBookList: [];
+  setFilteredBookList: Dispatch<[]>;
+  allBooksSelected: boolean;
+  setAllBooksSelected: Dispatch<boolean>;
 }
 
 export const VersesSearched = ({
@@ -31,9 +35,13 @@ export const VersesSearched = ({
   setPageNum,
   pageNum,
   pageSize,
+  filteredBookList,
+  setFilteredBookList,
+  allBooksSelected,
+  setAllBooksSelected,
 }: VersesSearchedProps) => {
-  const [isOnFilterPage, setIsOnFilterPage] = useState(false);
   const [isFirstRun, setIsFirstRun] = useState(true);
+  const [isOnFilterPage, setIsOnFilterPage] = useState(false);
 
   useEffect(() => {
     if (!isFirstRun) handlePageChange();
@@ -45,7 +53,7 @@ export const VersesSearched = ({
   }, []);
 
   const handlePageChange = () => {
-    const startIndex = (pageNum === 1) ? 0 : pageNum * pageSize;
+    const startIndex = pageNum === 1 ? 0 : pageNum * pageSize;
     console.log("handlePageChange, startIndex: ", startIndex, Date.now());
     // if verses have been filtered, paginate from filtered list
     if (versesSearchedFiltered && versesSearchedFiltered.length > 0) {
@@ -54,18 +62,12 @@ export const VersesSearched = ({
         Date.now()
       );
       setVersesSearched(
-        versesSearchedFiltered.slice(
-          startIndex,
-          startIndex + pageSize
-        )
+        versesSearchedFiltered.slice(startIndex, startIndex + pageSize)
       );
     } else {
       console.log("handlePageChange, pagination from VERSES COPY", Date.now());
       setVersesSearched(
-        versesSearchedCopy.slice(
-          startIndex,
-          startIndex + pageSize
-        )
+        versesSearchedCopy.slice(startIndex, startIndex + pageSize)
       );
     }
   };
@@ -96,6 +98,10 @@ export const VersesSearched = ({
           pageNum={pageNum}
           setPageNum={setPageNum}
           pageSize={pageSize}
+          filteredBookList={filteredBookList}
+          setFilteredBookList={setFilteredBookList}
+          allBooksSelected={allBooksSelected}
+          setAllBooksSelected={setAllBooksSelected}
         />
       )}
 
