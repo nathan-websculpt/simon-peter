@@ -15,7 +15,6 @@ import { BaseMenu } from "./BaseMenu";
 import { cn } from "@/lib/utils";
 
 export const Base = () => {
-  console.log("Base component rendered", Date.now());
   const [isInitialized, setIsInitialized] = useState(false);
   const [isInViewBooksMode, setIsInViewBooksMode] = useState(false);
   const [isInViewChaptersMode, setIsInViewChaptersMode] = useState(false);
@@ -33,16 +32,22 @@ export const Base = () => {
   const [isUserSearching, setIsUserSearching] = useState(false); // actively searching
   const [userSearchInput, setUserSearchInput] = useState("");
   const [userSearchInputProcessed, setUserSearchInputProcessed] = useState(""); //after it is cleaned/processed; change of this gens books-filter
-  const [versesSearched, setVersesSearched]: any = useState(null); //when user searches -- holds list of verses separated
-  const [versesSearchedCopy, setVersesSearchedCopy]: any = useState(null); //use to filter the nth time, so all verses can be included in the filer
+
+  // if verses have been filtered, paginate from filtered list; else, paginate from pristine copy
+  const [versesSearchedCopy, setVersesSearchedCopy]: any = useState(null); //used as a pristine copy, to filter against multiple times
+  const [versesSearchedFiltered, setVersesSearchedFiltered]: any =
+    useState(null); //filtered verses
+  const [versesSearched, setVersesSearched]: any = useState(null); //what the user sees on-screen
 
   const [showSearchingSpinner, setShowSearchingSpinner] = useState(false);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchType, setSearchType] = useState<string>("");
 
+  const [searchPageSize, setSearchPageSize] = useState(100);
+  const [searchPageNum, setSearchPageNum] = useState(1);
+
   useEffect(() => {
-    console.log("base component mounted", Date.now());
     if (!isInitialized) {
       setIsInitialized(true);
     }
@@ -104,6 +109,7 @@ export const Base = () => {
             setIsInSearchMode={setIsInSearchMode}
             setVersesSearched={setVersesSearched}
             setVersesSearchedCopy={setVersesSearchedCopy}
+            setVersesSearchedFiltered={setVersesSearchedFiltered}
             setIsUserSearching={setIsUserSearching}
             setUserSearchInput={setUserSearchInput}
           />
@@ -124,10 +130,13 @@ export const Base = () => {
                     setUserSearchInput={setUserSearchInput}
                     setVersesSearched={setVersesSearched}
                     setVersesSearchedCopy={setVersesSearchedCopy}
+                    setVersesSearchedFiltered={setVersesSearchedFiltered}
                     setIsUserSearching={setIsUserSearching}
                     setShowSearchingSpinner={setShowSearchingSpinner}
                     searchType={searchType}
                     setUserSearchInputProcessed={setUserSearchInputProcessed}
+                    pageNum={searchPageNum}
+                    pageSize={searchPageSize}
                   />
                 )}
 
@@ -142,7 +151,12 @@ export const Base = () => {
                       showSearchingSpinner={showSearchingSpinner}
                       setVersesSearched={setVersesSearched}
                       versesSearchedCopy={versesSearchedCopy}
+                      setVersesSearchedFiltered={setVersesSearchedFiltered}
+                      versesSearchedFiltered={versesSearchedFiltered}
                       userSearchInputProcessed={userSearchInputProcessed}
+                      pageNum={searchPageNum}
+                      pageSize={searchPageSize}
+                      setPageNum={setSearchPageNum}
                     />
                   )}
                 </>

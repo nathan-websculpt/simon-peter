@@ -13,10 +13,13 @@ interface SearchProps {
   setUserSearchInput: Dispatch<string>;
   setVersesSearched: Dispatch<any>; //todo: change 'any' and do a null-check below
   setVersesSearchedCopy: Dispatch<any>;
+  setVersesSearchedFiltered: Dispatch<any>;
   setIsUserSearching: Dispatch<boolean>;
   setShowSearchingSpinner: Dispatch<boolean>;
   searchType: string;
   setUserSearchInputProcessed: Dispatch<string>;
+  pageNum: number;
+  pageSize: number;
 }
 
 export const Search = ({
@@ -24,14 +27,17 @@ export const Search = ({
   setUserSearchInput,
   setVersesSearched,
   setVersesSearchedCopy,
+  setVersesSearchedFiltered,
   setIsUserSearching,
   setShowSearchingSpinner,
   searchType,
   setUserSearchInputProcessed,
+  pageNum,
+  pageSize,
 }: SearchProps) => {
-useEffect(() => {
-  console.log("search rendered");
-},[]);
+  useEffect(() => {
+    console.log("search rendered");
+  }, []);
   const handleSearch = async () => {
     console.log("debug e:");
     //validate input
@@ -80,9 +86,9 @@ useEffect(() => {
 
     if (data) {
       if (data?.verses) {
-        console.log("debug d:");
-        setVersesSearched(data.verses);
-        setVersesSearchedCopy(data.verses); //todo: this isn't technically necessary until the user filters
+        setVersesSearched(data?.verses.slice(0, pageSize)); //with pagination
+
+        setVersesSearchedCopy(data.verses); //whole return-set
         setUserSearchInputProcessed(newSearchString); //the change of this gens new filter-book list
         toast({
           message: `${data.verses.length.toString()} Verses Returned...`,
@@ -92,6 +98,7 @@ useEffect(() => {
         console.log("debug w:");
         setVersesSearched(null);
         setVersesSearchedCopy(null);
+        setVersesSearchedFiltered(null);
         toast({
           message: `0 Verses Returned...`,
           success: true,
@@ -101,6 +108,7 @@ useEffect(() => {
       console.log("debug c:");
       setVersesSearched(null);
       setVersesSearchedCopy(null);
+      setVersesSearchedFiltered(null);
       toast({
         message: `0 Verses Returned...`,
         success: true,
@@ -112,6 +120,7 @@ useEffect(() => {
     console.log("debug a:");
     setVersesSearched(null);
     setVersesSearchedCopy(null);
+    setVersesSearchedFiltered(null);
     setIsUserSearching(false);
     setUserSearchInput("");
   };

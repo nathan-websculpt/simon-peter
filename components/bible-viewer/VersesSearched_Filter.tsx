@@ -11,6 +11,10 @@ interface FilterProps {
   setVerses: Dispatch<[]>;
   userSearchInputProcessed: string;
   versesSearchedCopy: [];
+  setVersesSearchedFiltered: Dispatch<[]>;
+  pageNum: number;
+  setPageNum: Dispatch<number>;
+  pageSize: number;
 }
 
 export const Filter = ({
@@ -20,6 +24,10 @@ export const Filter = ({
   setVerses,
   userSearchInputProcessed,
   versesSearchedCopy,
+  setVersesSearchedFiltered,
+  pageNum,
+  setPageNum,
+  pageSize,
 }: FilterProps) => {
   const [bookList, setBookList] = useState([]);
   const [filteredBookList, setFilteredBookList] = useState([]);
@@ -33,12 +41,15 @@ export const Filter = ({
   const [allBooksSelected, setAllBooksSelected] = useState(true); //this is select/de-select all books (on filter page)
 
   useEffect(() => {
-    console.log("Filter component rendered", Date.now())
+    console.log("Filter component rendered", Date.now());
   }, []);
 
   useEffect(() => {
-    console.log("userSearchInputProcessed: ", userSearchInputProcessed);
-    console.log("processing books-filter list...");
+    console.log(
+      "userSearchInputProcessed: ",
+      userSearchInputProcessed,
+      "... processing books-filter list..."
+    );
     setHasUserFilteredThisSearchYet(false); //this will keep us from needing to use two copies of verses UNTIL the user filters
     processBooks();
   }, [userSearchInputProcessed]); //this will only change once user has established a new search
@@ -49,7 +60,6 @@ export const Filter = ({
 
   useEffect(() => {
     if (!isOnFilterPage && hasUserFilteredThisSearchYet) {
-      console.log("debug z:");
       handleBookFilter();
     }
   }, [isOnFilterPage]);
@@ -59,7 +69,7 @@ export const Filter = ({
       setResettingFilteredBookList(false);
       return;
     }
-    console.log("debug f");
+
     if (
       filteredBookList &&
       bookList &&
@@ -74,7 +84,6 @@ export const Filter = ({
         success: false,
       });
       setResettingFilteredBookList(true);
-      console.log("debug g");
       setFilteredBookList(filteredBookListCopy); //reset to the previous state
 
       //reset the checkbox that got us here
@@ -89,7 +98,6 @@ export const Filter = ({
 
     if (!hasUserFilteredThisSearchYet) setHasUserFilteredThisSearchYet(true);
 
-    console.log("debug L:");
     setFilteredBookListCopy(filteredBookList);
 
     if (filteredBookList && filteredBookList.length > 0)
@@ -97,13 +105,12 @@ export const Filter = ({
   }, [filteredBookList]);
 
   const processBooks = async () => {
-    console.log("debug x:");
     const uniqueBookTitles: any = Array.from(
-      new Set(verses.map((verse: any) => verse.book_title))
+      new Set(versesSearchedCopy.map((verse: any) => verse.book_title))
     ).sort(
       (a, b) =>
-        verses.findIndex((v: any) => v.book_title === a) -
-        verses.findIndex((v: any) => v.book_title === b)
+        versesSearchedCopy.findIndex((v: any) => v.book_title === a) -
+        versesSearchedCopy.findIndex((v: any) => v.book_title === b)
     );
     // ^^^ supplies list of unique book titles from search results (in order they appeared)
     setBookList(uniqueBookTitles);
@@ -114,12 +121,19 @@ export const Filter = ({
   const handleBookFilter = async () => {
     console.log("filtering verses...");
 
-    console.log("debug y:");
-    setVerses(
-      versesSearchedCopy.filter(
-        (verse) => !filteredBookList.includes(verse.book_title)
-      )
+    const _filtered = versesSearchedCopy.filter(
+      (verse) => !filteredBookList.includes(verse.book_title)
     );
+
+    // setVerses(_filtered);
+    setVersesSearchedFiltered(_filtered);
+
+    if (pageNum > 1) setPageNum(1); //will setVerses()
+    else //pageNum is 1
+      setVerses(
+        _filtered.slice(0, pageSize)
+      );
+    //^^^ if on page 1, then we'll get the subset of verses for the current page; else, pageNum change will take care of that
   };
 
   // select/de-select all books on filter page

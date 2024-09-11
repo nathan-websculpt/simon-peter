@@ -12,6 +12,7 @@ interface BaseMenuProps {
   setVersesSearchedCopy: Dispatch<[]>;
   setIsUserSearching: Dispatch<boolean>;
   setUserSearchInput: Dispatch<string>;
+  setVersesSearchedFiltered: Dispatch<[]>;
 }
 
 export const BaseMenu = ({
@@ -22,6 +23,7 @@ export const BaseMenu = ({
   setVersesSearchedCopy,
   setIsUserSearching,
   setUserSearchInput,
+  setVersesSearchedFiltered,
 }: BaseMenuProps) => {
   const handleSearchTypeSelection = (typeSelected: string) => {
     setSearchType(typeSelected);
@@ -30,8 +32,9 @@ export const BaseMenu = ({
 
     //clear previously searched verses
     console.log("debug b:");
-    setVersesSearched([]);
-    setVersesSearchedCopy([]);
+    setVersesSearched(null);
+    setVersesSearchedCopy(null);
+    setVersesSearchedFiltered(null);
     setIsUserSearching(false);
     setUserSearchInput("");
     //don't clear setUserSearchInputProcessed here, because it would processBooks() again
