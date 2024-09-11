@@ -139,8 +139,8 @@ export const Base = () => {
                     searchType={searchType}
                     setUserSearchInputProcessed={setUserSearchInputProcessed}
                     pageNum={searchPageNum}
+                    setPageNum={setSearchPageNum}
                     pageSize={searchPageSize}
-                    filteredBookList={filteredBookList}
                     setFilteredBookList={setFilteredBookList}
                     allBooksSelected={allBooksSelected}
                     setAllBooksSelected={setAllBooksSelected}

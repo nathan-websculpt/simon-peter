@@ -4,7 +4,7 @@ import {
   MagnifyingGlassCircleIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
-import { Dispatch, useEffect } from "react";
+import { Dispatch } from "react";
 
 // search bar, clear search button, and search button
 
@@ -19,8 +19,8 @@ interface SearchProps {
   searchType: string;
   setUserSearchInputProcessed: Dispatch<string>;
   pageNum: number;
+  setPageNum: Dispatch<number>;
   pageSize: number;
-  filteredBookList: [];
   setFilteredBookList: Dispatch<[]>;
   allBooksSelected: boolean;
   setAllBooksSelected: Dispatch<boolean>;
@@ -37,8 +37,8 @@ export const Search = ({
   searchType,
   setUserSearchInputProcessed,
   pageNum,
+  setPageNum,
   pageSize,
-  filteredBookList,
   setFilteredBookList,
   allBooksSelected,
   setAllBooksSelected,
@@ -56,6 +56,7 @@ export const Search = ({
       return;
     }
 
+    //reset select all checkbox on book-filters
     if (!allBooksSelected) setAllBooksSelected(true);
 
     setFilteredBookList([]);
@@ -93,10 +94,15 @@ export const Search = ({
 
     if (data) {
       if (data?.verses) {
-        setVersesSearched(data?.verses.slice(0, pageSize)); //with pagination
-
         setVersesSearchedCopy(data.verses); //whole return-set
         setUserSearchInputProcessed(newSearchString); //the change of this gens new filter-book list
+
+        if (pageNum !== 1) {
+          setPageNum(1); // this change will setVersesSearched() with a slice of versesSearchedCopy
+        } else {
+          setVersesSearched(data?.verses.slice(0, pageSize)); //with pagination
+        }
+
         toast({
           message: `${data.verses.length.toString()} Verses Returned...`,
           success: true,

@@ -1,6 +1,8 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Dispatch } from "react";
 
+//pagination for search results, 100 verses at a time
+
 interface SearchPagination {
   pageNum: number;
   setPageNum: Dispatch<number>;
@@ -52,6 +54,8 @@ export const SearchPagination = ({
             </button>
           </>
         )}
+
+    
 
         <span className="self-center font-medium text-primary-content">
           Page {pageNum}
