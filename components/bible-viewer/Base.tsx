@@ -49,6 +49,7 @@ export const Base = () => {
 
   const [searchPageSize, setSearchPageSize] = useState(100);
   const [searchPageNum, setSearchPageNum] = useState(1);
+  const [searchTotalPages, setSearchTotalPages] = useState(1);
 
   useEffect(() => {
     if (!isInitialized) {
@@ -144,6 +145,7 @@ export const Base = () => {
                     setFilteredBookList={setFilteredBookList}
                     allBooksSelected={allBooksSelected}
                     setAllBooksSelected={setAllBooksSelected}
+                    setSearchTotalPages={setSearchTotalPages}
                   />
                 )}
 
@@ -168,6 +170,7 @@ export const Base = () => {
                       setFilteredBookList={setFilteredBookList}
                       allBooksSelected={allBooksSelected}
                       setAllBooksSelected={setAllBooksSelected}
+                      searchTotalPages={searchTotalPages}
                     />
                   )}
                 </>

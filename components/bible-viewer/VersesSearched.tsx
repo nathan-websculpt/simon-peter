@@ -1,4 +1,4 @@
-import { Dispatch, useEffect, useState } from "react";
+import { Dispatch, useEffect, useRef, useState } from "react";
 import { LoadingSpinner } from "../helpers/LoadingSpinner";
 import { Filter } from "./VersesSearched_Filter";
 import { NoResults } from "./VersesSearched_NoResults";
@@ -22,6 +22,7 @@ interface VersesSearchedProps {
   setFilteredBookList: Dispatch<[]>;
   allBooksSelected: boolean;
   setAllBooksSelected: Dispatch<boolean>;
+  searchTotalPages: number;
 }
 
 export const VersesSearched = ({
@@ -39,9 +40,11 @@ export const VersesSearched = ({
   setFilteredBookList,
   allBooksSelected,
   setAllBooksSelected,
+  searchTotalPages,
 }: VersesSearchedProps) => {
   const [isFirstRun, setIsFirstRun] = useState(true);
   const [isOnFilterPage, setIsOnFilterPage] = useState(false);
+  const scrollToRef = useRef(null);
 
   useEffect(() => {
     if (!isFirstRun) handlePageChange();
@@ -53,22 +56,30 @@ export const VersesSearched = ({
   }, []);
 
   const handlePageChange = () => {
-    const startIndex = pageNum === 1 ? 0 : pageNum * pageSize;
-    console.log("handlePageChange, startIndex: ", startIndex, Date.now());
+    const startIndex = pageNum === 1 ? 0 : (pageNum - 1) * pageSize;
+    console.log("START INDEX: ", startIndex, Date.now());
+
     // if verses have been filtered, paginate from filtered list
     if (versesSearchedFiltered && versesSearchedFiltered.length > 0) {
-      console.log(
-        "handlePageChange, pagination from FILTERED VERSES",
-        Date.now()
-      );
+      //prevent index out of bounds on "next page"
+      const endIndex =
+        startIndex + pageSize < versesSearchedFiltered.length //if less-than TOTAL length
+          ? startIndex + pageSize
+          : versesSearchedFiltered.length;
+
+      console.log("END INDEX: ", endIndex, Date.now());
       setVersesSearched(
         versesSearchedFiltered.slice(startIndex, startIndex + pageSize)
       );
     } else {
-      console.log("handlePageChange, pagination from VERSES COPY", Date.now());
-      setVersesSearched(
-        versesSearchedCopy.slice(startIndex, startIndex + pageSize)
-      );
+      //prevent index out of bounds on "next page"
+      const endIndex =
+        startIndex + pageSize < versesSearchedCopy.length //if less-than TOTAL length
+          ? startIndex + pageSize
+          : versesSearchedCopy.length;
+
+      console.log("END INDEX: ", endIndex, Date.now());
+      setVersesSearched(versesSearchedCopy.slice(startIndex, endIndex));
     }
   };
 
@@ -110,10 +121,17 @@ export const VersesSearched = ({
       {!isOnFilterPage && (
         <>
           {verses && verses.length > 0 && (
-            <SearchPagination setPageNum={setPageNum} pageNum={pageNum} />
+            <SearchPagination
+              setPageNum={setPageNum}
+              pageNum={pageNum}
+              searchTotalPages={searchTotalPages}
+            />
           )}
 
-          <div className="grid grid-cols-1 gap-2 lg:gap-4 xl:gap-8 lg:grid-cols-2 xl:grid-cols-4 mb-12 w-screen px-2 lg:px-8 xl:px-12">
+          <div
+            ref={scrollToRef}
+            className="grid grid-cols-1 gap-2 lg:gap-4 xl:gap-8 lg:grid-cols-2 xl:grid-cols-4 mb-12 w-screen px-2 lg:px-8 xl:px-12"
+          >
             {verses?.map((verse: any) => (
               <div
                 key={verse.id.toString()}
@@ -126,6 +144,15 @@ export const VersesSearched = ({
               </div>
             ))}
           </div>
+
+          {verses && verses.length > 0 && (
+            <SearchPagination
+              setPageNum={setPageNum}
+              pageNum={pageNum}
+              scrollTo={scrollToRef}
+              searchTotalPages={searchTotalPages}
+            />
+          )}
         </>
       )}
     </>

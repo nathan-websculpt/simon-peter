@@ -24,6 +24,7 @@ interface SearchProps {
   setFilteredBookList: Dispatch<[]>;
   allBooksSelected: boolean;
   setAllBooksSelected: Dispatch<boolean>;
+  setSearchTotalPages: Dispatch<number>;
 }
 
 export const Search = ({
@@ -42,6 +43,7 @@ export const Search = ({
   setFilteredBookList,
   allBooksSelected,
   setAllBooksSelected,
+  setSearchTotalPages,
 }: SearchProps) => {
   const handleSearch = async () => {
     //validate input
@@ -94,6 +96,9 @@ export const Search = ({
 
     if (data) {
       if (data?.verses) {
+        if (data.verses.length <= pageSize) setSearchTotalPages(1);
+        else setSearchTotalPages(Math.ceil(data.verses.length / pageSize)); //total number of pages; ex: 9.5 will return 10 pages
+
         setVersesSearchedCopy(data.verses); //whole return-set
         setUserSearchInputProcessed(newSearchString); //the change of this gens new filter-book list
 
