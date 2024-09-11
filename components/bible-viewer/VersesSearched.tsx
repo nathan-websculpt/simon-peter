@@ -23,6 +23,7 @@ interface VersesSearchedProps {
   allBooksSelected: boolean;
   setAllBooksSelected: Dispatch<boolean>;
   searchTotalPages: number;
+  setSearchTotalPages: Dispatch<number>;
 }
 
 export const VersesSearched = ({
@@ -41,6 +42,7 @@ export const VersesSearched = ({
   allBooksSelected,
   setAllBooksSelected,
   searchTotalPages,
+  setSearchTotalPages,
 }: VersesSearchedProps) => {
   const [isFirstRun, setIsFirstRun] = useState(true);
   const [isOnFilterPage, setIsOnFilterPage] = useState(false);
@@ -68,9 +70,14 @@ export const VersesSearched = ({
           : versesSearchedFiltered.length;
 
       console.log("END INDEX: ", endIndex, Date.now());
-      setVersesSearched(
-        versesSearchedFiltered.slice(startIndex, startIndex + pageSize)
-      );
+
+      if (versesSearchedFiltered.length <= pageSize) setSearchTotalPages(1);
+      else
+        setSearchTotalPages(
+          Math.ceil(versesSearchedFiltered.length / pageSize)
+        ); //total number of pages; ex: 9.5 will return 10 pages
+
+      setVersesSearched(versesSearchedFiltered.slice(startIndex, endIndex));
     } else {
       //prevent index out of bounds on "next page"
       const endIndex =
@@ -79,6 +86,13 @@ export const VersesSearched = ({
           : versesSearchedCopy.length;
 
       console.log("END INDEX: ", endIndex, Date.now());
+
+      if (versesSearchedCopy.length <= pageSize) setSearchTotalPages(1);
+      else
+        setSearchTotalPages(
+          Math.ceil(versesSearchedCopy.length / pageSize)
+        ); //total number of pages; ex: 9.5 will return 10 pages
+
       setVersesSearched(versesSearchedCopy.slice(startIndex, endIndex));
     }
   };
@@ -113,6 +127,7 @@ export const VersesSearched = ({
           setFilteredBookList={setFilteredBookList}
           allBooksSelected={allBooksSelected}
           setAllBooksSelected={setAllBooksSelected}
+          setSearchTotalPages={setSearchTotalPages}
         />
       )}
 

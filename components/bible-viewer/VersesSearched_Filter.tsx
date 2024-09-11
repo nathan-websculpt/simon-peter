@@ -19,6 +19,7 @@ interface FilterProps {
   setFilteredBookList: Dispatch<[]>;
   allBooksSelected: boolean;
   setAllBooksSelected: Dispatch<boolean>;
+  setSearchTotalPages: Dispatch<number>;
 }
 
 export const Filter = ({
@@ -36,6 +37,7 @@ export const Filter = ({
   setFilteredBookList,
   allBooksSelected,
   setAllBooksSelected,
+  setSearchTotalPages,
 }: FilterProps) => {
   const [bookList, setBookList] = useState([]);
   const [filteredBookListCopy, setFilteredBookListCopy] = useState([]); //if the user filters out the last book, filteredBookList will be rest to filteredBookListCopy
@@ -44,10 +46,6 @@ export const Filter = ({
 
   const [hasUserFilteredThisSearchYet, setHasUserFilteredThisSearchYet] =
     useState(false);
-
-  useEffect(() => {
-    console.log("Filter component rendered", Date.now());
-  }, []);
 
   useEffect(() => {
     console.log(
@@ -95,7 +93,6 @@ export const Filter = ({
       const checkbox = document.querySelector<HTMLInputElement>(
         `input[id="${filteredBookList[filteredBookList.length - 1]}"]`
       );
-      console.log("checkbox: ", checkbox);
       if (checkbox) checkbox.checked = true;
 
       return;
@@ -134,8 +131,18 @@ export const Filter = ({
     setVersesSearchedFiltered(_filtered);
 
     if (pageNum > 1) setPageNum(1); //will setVerses()
-    //pageNum is 1
-    else setVerses(_filtered.slice(0, pageSize));
+    else {
+      const startIndex = pageNum === 1 ? 0 : (pageNum - 1) * pageSize; //prevent index out of bounds on "next page"
+      const endIndex =
+        startIndex + pageSize < _filtered.length //if less-than TOTAL length
+          ? startIndex + pageSize
+          : _filtered.length;
+
+      setVerses(_filtered.slice(startIndex, endIndex));
+
+      if (_filtered.length <= pageSize) setSearchTotalPages(1);
+      else setSearchTotalPages(Math.ceil(_filtered.length / pageSize)); //total number of pages; ex: 9.5 will return 10 pages
+    }
     //^^^ if on page 1, then we'll get the subset of verses for the current page; else, pageNum change will take care of that
   };
 

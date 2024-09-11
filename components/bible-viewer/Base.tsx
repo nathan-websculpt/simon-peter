@@ -171,6 +171,7 @@ export const Base = () => {
                       allBooksSelected={allBooksSelected}
                       setAllBooksSelected={setAllBooksSelected}
                       searchTotalPages={searchTotalPages}
+                      setSearchTotalPages={setSearchTotalPages}
                     />
                   )}
                 </>
