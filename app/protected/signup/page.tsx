@@ -2,7 +2,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { SubmitButton } from "../../components/forms/submit-button";
+import { SubmitButton } from "../../../components/forms/submit-button";
 import { Input } from "@/components/forms/input";
 import { Label } from "@/components/forms/label";
 import { FormMessage, Message } from "@/components/forms/form-message";
