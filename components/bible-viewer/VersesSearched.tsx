@@ -69,7 +69,8 @@ export const VersesSearched = ({
           ? startIndex + pageSize
           : versesSearchedFiltered.length;
 
-      console.log("END INDEX: ", endIndex, Date.now());
+      console.log("END INDEX, filtered before: ", endIndex, Date.now());
+      console.log("what's in filtered: ", versesSearchedFiltered, Date.now());
 
       if (versesSearchedFiltered.length <= pageSize) setSearchTotalPages(1);
       else
@@ -85,7 +86,7 @@ export const VersesSearched = ({
           ? startIndex + pageSize
           : versesSearchedCopy.length;
 
-      console.log("END INDEX: ", endIndex, Date.now());
+      console.log("END INDEX, from pristine copy: ", endIndex, Date.now());
 
       if (versesSearchedCopy.length <= pageSize) setSearchTotalPages(1);
       else

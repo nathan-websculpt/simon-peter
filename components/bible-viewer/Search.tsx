@@ -61,6 +61,7 @@ export const Search = ({
     //reset select all checkbox on book-filters
     if (!allBooksSelected) setAllBooksSelected(true);
 
+    setVersesSearchedFiltered(null);
     setFilteredBookList([]);
     setShowSearchingSpinner(true);
     setIsUserSearching(true);

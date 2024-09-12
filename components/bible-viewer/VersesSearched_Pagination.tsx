@@ -26,10 +26,6 @@ export const SearchPagination = ({
     }
   };
 
-  useEffect(() => {
-    console.log("searchTotalPages: ", searchTotalPages);
-  }, [searchTotalPages]);
-
   return (
     <>
       <div className="flex justify-end gap-3 mx-5 mt-8 xl:mt-6 w-11/12 xl:w-4/5">
