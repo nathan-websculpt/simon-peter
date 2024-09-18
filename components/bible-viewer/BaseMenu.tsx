@@ -13,6 +13,7 @@ interface BaseMenuProps {
   setIsUserSearching: Dispatch<boolean>;
   setUserSearchInput: Dispatch<string>;
   setVersesSearchedFiltered: Dispatch<[]>;
+  setIsInSummariesView: Dispatch<boolean>;
 }
 
 export const BaseMenu = ({
@@ -24,6 +25,7 @@ export const BaseMenu = ({
   setIsUserSearching,
   setUserSearchInput,
   setVersesSearchedFiltered,
+  setIsInSummariesView,
 }: BaseMenuProps) => {
   const handleSearchTypeSelection = (typeSelected: string) => {
     setSearchType(typeSelected);
@@ -39,9 +41,26 @@ export const BaseMenu = ({
     //don't clear setUserSearchInputProcessed here, because it would processBooks() again
   };
 
+  const viewSummaries = () => {
+    setIsInSummariesView(true);
+    setIsMenuOpen(false);
+  };
+
   return (
     <>
       <div className="w-screen flex flex-col prose">
+        <div
+          className="border-t border-b border-gray-300 cursor-pointer"
+          onClick={() => viewSummaries()}
+        >
+          <div className="pl-12 pr-6 py-12">
+            <h1 className="underline">All Books Summarized</h1>
+            <p className="prose-lg xl:prose-xl">
+              Sync the Bible summarized in one concise place.
+            </p>
+            <ArrowRightCircleIcon className="w-8 h-8 float-right" />
+          </div>
+        </div>
         <div
           className="border-t border-b border-gray-300 cursor-pointer"
           onClick={() => handleSearchTypeSelection("simple")}
