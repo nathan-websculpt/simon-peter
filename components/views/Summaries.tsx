@@ -341,7 +341,7 @@ export function Summaries({ setIsInSummariesView }: SummariesProps) {
 
   return (
     <>
-      <div className="w-full lg:w-4/5 xl:w-3/5 ml-6 lg:ml-8 xl:ml-12 mt-8 lg:mt-12 flex flex-col">
+      <div className="w-full lg:w-4/5 xl:w-3/5 lg:ml-8 xl:ml-12 mt-8 lg:mt-12 flex flex-col">
         <button
           className="btn-circle btn btn-primary ml-4"
           onClick={() => setIsInSummariesView(false)}
