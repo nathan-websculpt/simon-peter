@@ -14,6 +14,7 @@ interface BaseMenuProps {
   setUserSearchInput: Dispatch<string>;
   setVersesSearchedFiltered: Dispatch<[]>;
   setIsInSummariesView: Dispatch<boolean>;
+  setIsInGospelOnchainView: Dispatch<boolean>;
 }
 
 export const BaseMenu = ({
@@ -26,6 +27,7 @@ export const BaseMenu = ({
   setUserSearchInput,
   setVersesSearchedFiltered,
   setIsInSummariesView,
+  setIsInGospelOnchainView,
 }: BaseMenuProps) => {
   const handleSearchTypeSelection = (typeSelected: string) => {
     setSearchType(typeSelected);
@@ -46,9 +48,26 @@ export const BaseMenu = ({
     setIsMenuOpen(false);
   };
 
+  const viewGospelOnchain = () => {
+    setIsInGospelOnchainView(true);
+    setIsMenuOpen(false);
+  };
+
   return (
     <>
       <div className="w-screen flex flex-col prose">
+        <div
+          className="border-t border-b border-gray-300 cursor-pointer"
+          onClick={() => viewGospelOnchain()}
+        >
+          <div className="pl-12 pr-6 py-12">
+            <h1 className="underline">Gospel Onchain</h1>
+            <p className="prose-lg xl:prose-xl">
+              Learn about my other project - an endeavor to store the Bible on the blockchain. Why? Click to learn more...
+            </p>
+            <ArrowRightCircleIcon className="w-8 h-8 float-right" />
+          </div>
+        </div>
         <div
           className="border-t border-b border-gray-300 cursor-pointer"
           onClick={() => viewSummaries()}
@@ -56,7 +75,7 @@ export const BaseMenu = ({
           <div className="pl-12 pr-6 py-12">
             <h1 className="underline">All Books Summarized</h1>
             <p className="prose-lg xl:prose-xl">
-              Sync the Bible summarized in one concise place.
+              See the Bible summarized in one concise place.
             </p>
             <ArrowRightCircleIcon className="w-8 h-8 float-right" />
           </div>

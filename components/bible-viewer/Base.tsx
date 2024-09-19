@@ -14,6 +14,7 @@ import { handleRPC } from "@/utils/handleRPC";
 import { BaseMenu } from "./BaseMenu";
 import { cn } from "@/lib/utils";
 import { Summaries } from "../views/Summaries";
+import { GospelOnchain } from "../views/GospelOnchain";
 
 export const Base = () => {
   const [isInitialized, setIsInitialized] = useState(false);
@@ -86,11 +87,14 @@ export const Base = () => {
 
   return (
     <>
-      {isInSummariesView ? (
+      {isInGospelOnchainView ? (
+        // in gospel onchain view
+        <GospelOnchain setIsInGospelOnchainView={setIsInGospelOnchainView} />
+      ) : isInSummariesView ? (
         // in summaries view
         <Summaries setIsInSummariesView={setIsInSummariesView} />
       ) : (
-        // not in summaries view
+        // not in another view
         <>
           <div
             className={cn(
@@ -130,6 +134,7 @@ export const Base = () => {
                 setIsUserSearching={setIsUserSearching}
                 setUserSearchInput={setUserSearchInput}
                 setIsInSummariesView={setIsInSummariesView}
+                setIsInGospelOnchainView={setIsInGospelOnchainView}
               />
             </>
           ) : (
