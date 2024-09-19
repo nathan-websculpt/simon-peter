@@ -3,11 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 import { ImgLoop } from "./ImgLoop";
 
-// Using IntersectionObserver to show/hide sections as user scrolls
-// Making sections larger, because I noticed some blinking on fast srolls
-// These are just X amount of images and I know the order and the structure of the images, 
+// DEV NOTES
+// Using IntersectionObserver to show/hide sections as user scrolls.
+// Making sections larger, because I noticed some blinking on fast scrolls (ctrl + end or ctrl + home)...
+// Won't be able to hide the images above the viewport until implementing a functionality that will determine whether or not the user is scrolling up or down. But then I had a problem with fast scrolling
+// Final decision was to load them as you scroll and keep them all in the viewport (I'm currently disregarding all the code that will hide images above the viewport)
+//
+// These are just X amount of images and I know the order and the structure of the images,
 // so I am not going to refactor this until I have a better idea of what it will look like in the end.
-
+//
+//
+//
 // To test amt of imgs on page w/ console: document.getElementsByTagName('img').length
 
 export function Summaries() {
@@ -28,7 +34,7 @@ export function Summaries() {
   const [showSectionFive, setShowSectionFive] = useState(false);
   const [showSectionSix, setShowSectionSix] = useState(false);
   const [showSectionSeven, setShowSectionSeven] = useState(false);
-  const options = { root: null, rootMargin: "0px", threshold: 1.0 };
+  const options = { root: null, rootMargin: "10px", threshold: 0 };
 
   // BEGIN::
   // elemRefOne IntersectionObserver
@@ -113,7 +119,7 @@ export function Summaries() {
     const [entry] = entries;
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
-      setShowSectionOne(false);
+      // setShowSectionOne(false);
       setShowSectionFour(true);
     }
   };
@@ -152,7 +158,7 @@ export function Summaries() {
     const [entry] = entries;
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
-      setShowSectionTwo(false);
+      // setShowSectionTwo(false);
       setShowSectionFive(true);
     }
   };
@@ -191,7 +197,7 @@ export function Summaries() {
     const [entry] = entries;
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
-      setShowSectionThree(false);
+      // setShowSectionThree(false);
       setShowSectionSix(true);
     }
   };
@@ -230,7 +236,7 @@ export function Summaries() {
     const [entry] = entries;
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
-      setShowSectionFour(false);
+      // setShowSectionFour(false);
       setShowSectionSeven(true);
     }
   };
@@ -269,14 +275,14 @@ export function Summaries() {
     const [entry] = entries;
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
-      // setShowSectionThree(true);
-      // setShowSectionFour(true);
-      // setShowSectionFive(true);
-      //setShowSectionSix(true);
-      //TODO: be sure all sections are visible
-      //TODO: prevent CTRL + END from causing them to hide when scroll up
-      //TODO: prevent CTRL + HOME from causing them to hide when scroll down
-      //TODO: having problems with fast-scrolling past refs
+      // This logic allows the user to press (ctrl + end) to iteratively to step through the sections
+      if (!showSectionOne) { setShowSectionOne(true); return; }
+      if (!showSectionTwo) { setShowSectionTwo(true); return; }
+      if (!showSectionThree) { setShowSectionThree(true); return; }
+      if (!showSectionFour) { setShowSectionFour(true); return; }
+      if (!showSectionFive) { setShowSectionFive(true); return; }
+      if (!showSectionSix) { setShowSectionSix(true); return; }
+      if (!showSectionSeven) { setShowSectionSeven(true); return; }
     }
   };
 
@@ -452,8 +458,7 @@ export function Summaries() {
         </>
       )}
 
-      {/* TODO: add bottom ref */}
-      {/* <div ref={bottomRef}></div> */}
+      <div ref={bottomRef}></div>
     </>
   );
 }
