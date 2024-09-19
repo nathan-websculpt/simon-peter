@@ -443,7 +443,7 @@ export function Summaries({ setIsInSummariesView }: SummariesProps) {
 
             <img
               className="mx-auto lg:w-4/5 xl:w-3/5 my-4 xl:my-12"
-              src="/img/bible_summary_dark/44.png"
+              src="/img/bible_summary_dark/44.svg"
               alt="The Bible Summarized – Book 44"
             />
           </div>
@@ -485,7 +485,7 @@ export function Summaries({ setIsInSummariesView }: SummariesProps) {
 
             <img
               className="mx-auto lg:w-4/5 xl:w-3/5 my-4 xl:my-12"
-              src="/img/bible_summary_dark/66.png"
+              src="/img/bible_summary_dark/66.svg"
               alt="The Bible Summarized – Book 66"
             />
           </div>
