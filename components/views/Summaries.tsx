@@ -440,12 +440,19 @@ export function Summaries({ setIsInSummariesView }: SummariesProps) {
             <h1 className="prose prose-2xl underline underline-offset-8">
               History of the early Church
             </h1>
-
-            <img
-              className="mx-auto lg:w-4/5 xl:w-3/5 my-4 xl:my-12"
-              src="/img/bible_summary_dark/44.svg"
-              alt="The Bible Summarized – Book 44"
-            />
+            <div
+              style={{
+                justifyContent: "center",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <img
+                className="mx-auto lg:w-4/5 xl:w-3/5 my-4 xl:my-12"
+                src="/img/bible_summary_dark/44.svg"
+                alt="The Bible Summarized – Book 44"
+              />
+            </div>
           </div>
         </>
       )}
@@ -478,16 +485,24 @@ export function Summaries({ setIsInSummariesView }: SummariesProps) {
           </div>
 
           {/* REVELATION */}
-          <div className="w-full flex flex-col gap-2 items-center mt-5 xl:mt-12 border-t pt-6 xl:pt-16">
+          <div className="w-full flex flex-col gap-2 items-center mt-5 xl:mt-12 border-t pt-6 xl:pt-16 border-b">
             <h1 className="prose prose-2xl underline underline-offset-8">
               The Revelation of Jesus Christ
             </h1>
 
-            <img
-              className="mx-auto lg:w-4/5 xl:w-3/5 my-4 xl:my-12"
-              src="/img/bible_summary_dark/66.svg"
-              alt="The Bible Summarized – Book 66"
-            />
+            <div
+              style={{
+                justifyContent: "center",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <img
+                className="mx-auto lg:w-4/5 xl:w-3/5 my-4 xl:my-12"
+                src="/img/bible_summary_dark/66.svg"
+                alt="The Bible Summarized – Book 66"
+              />
+            </div>
           </div>
         </>
       )}
