@@ -12,9 +12,6 @@ export const metadata = {
   title: "KJV Bible",
   description:
     "Read the Bible and learn more with a set of powerful search tools for the KJV Bible.",
-  canonical: `${defaultUrl}/`,
-  "opengraph-image": `${defaultUrl}/img/og_kjv_bible.png`,
-  "twitter-image": `${defaultUrl}/img/og_kjv_bible.png`,
 };
 
 export default function RootLayout({
