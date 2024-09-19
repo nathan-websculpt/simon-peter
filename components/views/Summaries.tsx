@@ -3,7 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { ImgLoop } from "./ImgLoop";
 
-// Testing amt of imgs on page w/ console: document.getElementsByTagName('img').length
+// Using IntersectionObserver to show/hide sections as user scrolls
+// Making sections larger, because I noticed some blinking on fast srolls
+// These are just X amount of images and I know the order and the structure of the images, 
+// so I am not going to refactor this until I have a better idea of what it will look like in the end.
+
+// To test amt of imgs on page w/ console: document.getElementsByTagName('img').length
 
 export function Summaries() {
   const [firstRun, setFirstRun] = useState(true);
@@ -16,6 +21,8 @@ export function Summaries() {
 
   const bottomRef = useRef(null);
 
+  // There is no section two, don't worry about it
+  const [showSectionOne, setShowSectionOne] = useState(true);
   const [showSectionThree, setShowSectionThree] = useState(false);
   const [showSectionFour, setShowSectionFour] = useState(false);
   const [showSectionFive, setShowSectionFive] = useState(false);
@@ -107,6 +114,7 @@ export function Summaries() {
     const [entry] = entries;
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
+      setShowSectionOne(false);
       setShowSectionFive(true);
     }
   };
@@ -145,6 +153,7 @@ export function Summaries() {
     const [entry] = entries;
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
+      setShowSectionThree(false);
       setShowSectionSix(true);
     }
   };
@@ -183,6 +192,7 @@ export function Summaries() {
     const [entry] = entries;
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
+      setShowSectionFour(false);
       setShowSectionSeven(true);
     }
   };
@@ -221,6 +231,7 @@ export function Summaries() {
     const [entry] = entries;
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
+      setShowSectionFive(false);
       setShowSectionEight(true);
     }
   };
@@ -299,26 +310,30 @@ export function Summaries() {
 
   return (
     <>
-      {/* BOOKS OF THE LAW */}
-      <div className="w-full flex flex-col gap-2 items-center mt-5 xl:mt-12">
-        <h1 className="prose prose-2xl underline underline-offset-8">
-          Books of the Law
-        </h1>
+      {showSectionOne && (
+        <>
+          {/* BOOKS OF THE LAW */}
+          <div className="w-full flex flex-col gap-2 items-center mt-5 xl:mt-12">
+            <h1 className="prose prose-2xl underline underline-offset-8">
+              Books of the Law
+            </h1>
 
-        <ImgLoop len={5} offset={1} lastImg={5} />
-      </div>
+            <ImgLoop len={5} offset={1} lastImg={5} />
+          </div>
 
-      {/* BOOKS OF History */}
-      <div className="w-full flex flex-col gap-2 items-center mt-5 xl:mt-12 border-t pt-6 xl:pt-16">
-        <h1
-          className="prose prose-2xl underline underline-offset-8"
-          ref={elemRefOne}
-        >
-          Books of History
-        </h1>
+          {/* BOOKS OF History */}
+          <div className="w-full flex flex-col gap-2 items-center mt-5 xl:mt-12 border-t pt-6 xl:pt-16">
+            <h1
+              className="prose prose-2xl underline underline-offset-8"
+              ref={elemRefOne}
+            >
+              Books of History
+            </h1>
 
-        <ImgLoop len={12} offset={6} lastImg={17} />
-      </div>
+            <ImgLoop len={12} offset={6} lastImg={17} />
+          </div>
+        </>
+      )}
 
       {showSectionThree && (
         <>
