@@ -21,14 +21,13 @@ export function Summaries() {
 
   const bottomRef = useRef(null);
 
-  // There is no section two, don't worry about it
   const [showSectionOne, setShowSectionOne] = useState(true);
+  const [showSectionTwo, setShowSectionTwo] = useState(false);
   const [showSectionThree, setShowSectionThree] = useState(false);
   const [showSectionFour, setShowSectionFour] = useState(false);
   const [showSectionFive, setShowSectionFive] = useState(false);
   const [showSectionSix, setShowSectionSix] = useState(false);
   const [showSectionSeven, setShowSectionSeven] = useState(false);
-  const [showSectionEight, setShowSectionEight] = useState(false);
   const options = { root: null, rootMargin: "0px", threshold: 1.0 };
 
   // BEGIN::
@@ -38,7 +37,7 @@ export function Summaries() {
     const [entry] = entries;
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
-      setShowSectionThree(true);
+      setShowSectionTwo(true);
     }
   };
 
@@ -76,7 +75,7 @@ export function Summaries() {
     const [entry] = entries;
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
-      setShowSectionFour(true);
+      setShowSectionThree(true);
     }
   };
 
@@ -115,7 +114,7 @@ export function Summaries() {
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
       setShowSectionOne(false);
-      setShowSectionFive(true);
+      setShowSectionFour(true);
     }
   };
 
@@ -153,8 +152,8 @@ export function Summaries() {
     const [entry] = entries;
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
-      setShowSectionThree(false);
-      setShowSectionSix(true);
+      setShowSectionTwo(false);
+      setShowSectionFive(true);
     }
   };
 
@@ -192,8 +191,8 @@ export function Summaries() {
     const [entry] = entries;
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
-      setShowSectionFour(false);
-      setShowSectionSeven(true);
+      setShowSectionThree(false);
+      setShowSectionSix(true);
     }
   };
 
@@ -231,8 +230,8 @@ export function Summaries() {
     const [entry] = entries;
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
-      setShowSectionFive(false);
-      setShowSectionEight(true);
+      setShowSectionFour(false);
+      setShowSectionSeven(true);
     }
   };
 
@@ -335,7 +334,7 @@ export function Summaries() {
         </>
       )}
 
-      {showSectionThree && (
+      {showSectionTwo && (
         <>
           {/* BOOKS OF Poetry */}
           <div className="w-full flex flex-col gap-2 items-center mt-5 xl:mt-12 border-t pt-6 xl:pt-16">
@@ -351,7 +350,7 @@ export function Summaries() {
         </>
       )}
 
-      {showSectionFour && (
+      {showSectionThree && (
         <>
           {/* BOOKS OF Major Prophets */}
           <div className="w-full flex flex-col gap-2 items-center mt-5 xl:mt-12 border-t pt-6 xl:pt-16">
@@ -367,7 +366,7 @@ export function Summaries() {
         </>
       )}
 
-      {showSectionFive && (
+      {showSectionFour && (
         <>
           {/* BOOKS OF Minor Prophets */}
           <div className="w-full flex flex-col gap-2 items-center mt-5 xl:mt-12 border-t pt-6 xl:pt-16">
@@ -383,7 +382,7 @@ export function Summaries() {
         </>
       )}
 
-      {showSectionSix && (
+      {showSectionFive && (
         <>
           {/* GOSPELS + ACTS */}
           <div className="w-full flex flex-col gap-2 items-center mt-5 xl:mt-12 border-t pt-6 xl:pt-16">
@@ -411,7 +410,7 @@ export function Summaries() {
         </>
       )}
 
-      {showSectionSeven && (
+      {showSectionSix && (
         <>
           {/* PAULINE EPISTLES */}
           <div className="w-full flex flex-col gap-2 items-center mt-5 xl:mt-12 border-t pt-6 xl:pt-16">
@@ -427,7 +426,7 @@ export function Summaries() {
         </>
       )}
 
-      {showSectionEight && (
+      {showSectionSeven && (
         <>
           {/* GENERAL EPISTLES */}
           <div className="w-full flex flex-col gap-2 items-center mt-5 xl:mt-12 border-t pt-6 xl:pt-16">
