@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, useEffect, useRef, useState } from "react";
 import { ImgLoop } from "./ImgLoop";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 // DEV NOTES
 // Using IntersectionObserver to show/hide sections as user scrolls.
@@ -16,7 +17,11 @@ import { ImgLoop } from "./ImgLoop";
 //
 // To test amt of imgs on page w/ console: document.getElementsByTagName('img').length
 
-export function Summaries() {
+export interface SummariesProps {
+  setIsInSummariesView: Dispatch<React.SetStateAction<boolean>>;
+}
+
+export function Summaries({ setIsInSummariesView }: SummariesProps) {
   const [firstRun, setFirstRun] = useState(true);
   const elemRefOne = useRef(null);
   const elemRefTwo = useRef(null);
@@ -276,13 +281,34 @@ export function Summaries() {
     console.log("entry.isIntersecting:", entry.isIntersecting);
     if (entry.isIntersecting) {
       // This logic allows the user to press (ctrl + end) to iteratively to step through the sections
-      if (!showSectionOne) { setShowSectionOne(true); return; }
-      if (!showSectionTwo) { setShowSectionTwo(true); return; }
-      if (!showSectionThree) { setShowSectionThree(true); return; }
-      if (!showSectionFour) { setShowSectionFour(true); return; }
-      if (!showSectionFive) { setShowSectionFive(true); return; }
-      if (!showSectionSix) { setShowSectionSix(true); return; }
-      if (!showSectionSeven) { setShowSectionSeven(true); return; }
+      if (!showSectionOne) {
+        setShowSectionOne(true);
+        return;
+      }
+      if (!showSectionTwo) {
+        setShowSectionTwo(true);
+        return;
+      }
+      if (!showSectionThree) {
+        setShowSectionThree(true);
+        return;
+      }
+      if (!showSectionFour) {
+        setShowSectionFour(true);
+        return;
+      }
+      if (!showSectionFive) {
+        setShowSectionFive(true);
+        return;
+      }
+      if (!showSectionSix) {
+        setShowSectionSix(true);
+        return;
+      }
+      if (!showSectionSeven) {
+        setShowSectionSeven(true);
+        return;
+      }
     }
   };
 
@@ -315,6 +341,14 @@ export function Summaries() {
 
   return (
     <>
+      <div className="w-full lg:w-4/5 xl:w-3/5 ml-6 lg:ml-8 xl:ml-12 mt-8 lg:mt-12 flex flex-col">
+        <button
+          className="btn-circle btn btn-primary ml-4"
+          onClick={() => setIsInSummariesView(false)}
+        >
+          <ArrowLeftIcon className="w-6 h-6" />
+        </button>
+      </div>
       {showSectionOne && (
         <>
           {/* BOOKS OF THE LAW */}

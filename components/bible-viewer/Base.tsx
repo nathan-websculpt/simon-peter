@@ -87,7 +87,7 @@ export const Base = () => {
     <>
       {isInSummariesView ? (
         // in summaries view
-        <Summaries />
+        <Summaries setIsInSummariesView={setIsInSummariesView} />
       ) : (
         // not in summaries view
         <>
