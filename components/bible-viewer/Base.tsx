@@ -53,6 +53,7 @@ export const Base = () => {
   const [searchTotalPages, setSearchTotalPages] = useState(1);
 
   const [isInSummariesView, setIsInSummariesView] = useState(false);
+  const [isInGospelOnchainView, setIsInGospelOnchainView] = useState(false);
 
   useEffect(() => {
     if (!isInitialized) {
