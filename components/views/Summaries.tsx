@@ -4,6 +4,9 @@ import { Dispatch, useEffect, useRef, useState } from "react";
 import { ImgLoop } from "./ImgLoop";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
+// After the fact notes: I'm glad I didn't refactor it because I am starting to think that the images are too small on the phone, and that possibly this should just be text being read from the database
+// 
+// 
 // DEV NOTES
 // Using IntersectionObserver to show/hide sections as user scrolls.
 // Making sections larger, because I noticed some blinking on fast scrolls (ctrl + end or ctrl + home)...
