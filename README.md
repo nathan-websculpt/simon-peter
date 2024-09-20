@@ -32,7 +32,6 @@ npm i drizzle-orm drizzle-zod pg dotenv dotenv-expand
 npm i -D drizzle-kit @types/pg eslint-plugin-drizzle tsx @faker-js/faker
 ```
 
-
 Learn more about the [Supabase Template](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs)
 
 ## simon-peter is built like this...
@@ -42,7 +41,6 @@ Learn more about the [Supabase Template](https://supabase.com/docs/guides/gettin
 - Postgres
 - Full Text Search (FTS) implemented on verses
 
-
 ##### DEV NOTES:
 
 - Too early to make big decisions or to do big refactors, but I ended up writing SQL more-so than using the ORM.
@@ -50,4 +48,4 @@ Learn more about the [Supabase Template](https://supabase.com/docs/guides/gettin
 - My honest opinion after 15 years of DEV is that ORMs are only the way to go for enterprise apps that employ more project managers than developers.
 - I have built this app multiple ways throughout the years, so I simply have a view of the structure - I don't think I need/want an ORM.
 - As I started to run migrations across different environments, I opted to just maintain my own SQL.
-- BUT, the Drizzle Migration is only missing the citext generated column for FTS (barely out-of-date).
+- BUT, the Drizzle Migration is only missing the citext generated column for FTS (BARELY out-of-date).
